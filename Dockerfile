@@ -23,4 +23,4 @@ COPY /site /site
 
 # Our command
 WORKDIR /site
-CMD ["jekyll serve"]
+CMD ["jekyll", "serve"]
