@@ -9,6 +9,14 @@ RUN apt-get update && \
     && \
     apt-get clean
 
+# Install the packages we need for publishing
+RUN apt-get update && \
+    apt-get install -y \
+      gawk \
+      sshpass \
+    && \
+    apt-get clean
+
 # Install the packages we need for Jekyll
 RUN apt-get update && \
     apt-get install -y \

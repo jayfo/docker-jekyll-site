@@ -30,6 +30,31 @@ cd /site
 git fetch --all
 git checkout --force origin/master
 
-# Launch our server, making it the process to ensure Docker behaves
-# http://www.projectatomic.io/docs/docker-image-author-guidance/
-exec jekyll serve --host 0.0.0.0
+# Build our site
+jekyll build
+
+# If we have a publish configuration, then we do that, otherwise we serve ourselves
+if [[ -f /publish.yml ]] ; then
+  # Parse our file
+  dos2unix -n /publish.yml /publishcleaned.yml
+  PUBLISH_USER=$(awk '{ if(match($0, /  user: (.*)/, arr)) print arr[1] }' /publishcleaned.yml)
+  PUBLISH_PASSWORD=$(awk '{ if(match($0, /  password: (.*)/, arr)) print arr[1] }' /publishcleaned.yml)
+  PUBLISH_HOST=$(awk '{ if(match($0, /  host: (.*)/, arr)) print arr[1] }' /publishcleaned.yml)
+  PUBLISH_STAGING=$(awk '{ if(match($0, /  staging: (.*)/, arr)) print arr[1] }' /publishcleaned.yml)
+  PUBLISH_PUBLISH=$(awk '{ if(match($0, /  publish: (.*)/, arr)) print arr[1] }' /publishcleaned.yml)
+
+  SSH_OPTIONS='-o LogLevel=quiet -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+
+  # Ensure our directories exist
+  sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST mkdir -p $PUBLISH_STAGING
+  sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST mkdir -p $PUBLISH_PUBLISH
+  # Upload the files
+  sshpass -p $PUBLISH_PASSWORD rsync -rcv --delete -e "ssh $SSH_OPTIONS" /site/_site/* $PUBLISH_USER@$PUBLISH_HOST:$PUBLISH_STAGING
+  # Put the files in place
+  sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST rsync -rcv --delete $PUBLISH_STAGING $PUBLISH_PUBLISH
+else
+  # Launch our server, making it the process to ensure Docker behaves
+  # http://www.projectatomic.io/docs/docker-image-author-guidance/
+  exec jekyll serve --host 0.0.0.0
+fi
+
