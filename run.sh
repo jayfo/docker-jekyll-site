@@ -1,17 +1,17 @@
 #!/bin/bash
 
 # Ensure our repository is defined
-if [[ ! -n $JEKYLL_GIT_REPOSITORY ]] ; then
-  echo "\$JEKYLL_GIT_REPOSITORY not defined"
+if [[ ! -n $GIT_REPOSITORY_SITE ]] ; then
+  echo "\$GIT_REPOSITORY_SITE not defined"
   exit 1
 fi
 
 # If we have an existing repository, but not the right one, we need to start from scratch
-EXISTING_GIT_REPOSITORY=$(git --git-dir=/site/.git remote -v | grep -m 1 origin | awk -F'[ \t]' '{print $2}')
-echo "Desired Repository: $JEKYLL_GIT_REPOSITORY"
-echo "Existing Repository: $EXISTING_GIT_REPOSITORY"
+GIT_REPOSITORY_EXISTING=$(git --git-dir=/site/.git remote -v | grep -m 1 origin | awk -F'[ \t]' '{print $2}')
+echo "Desired Repository: $GIT_REPOSITORY_SITE"
+echo "Existing Repository: $GIT_REPOSITORY_EXISTING"
 if [[ -d /site ]] ; then
-  if [[ $JEKYLL_GIT_REPOSITORY != $EXISTING_GIT_REPOSITORY ]] ; then
+  if [[ $GIT_REPOSITORY_SITE != $GIT_REPOSITORY_EXISTING ]] ; then
     rm -rf /site/*
     rm -rf /site/.[!.]?*
   fi
@@ -19,7 +19,7 @@ fi
 
 # Check whether this is our first time running, such that we need to clone
 if [[ ! -d /site/.git ]] ; then
-  git clone $JEKYLL_GIT_REPOSITORY /site
+  git clone $GIT_REPOSITORY_SITE /site
 fi
 
 # Change into the site directory
