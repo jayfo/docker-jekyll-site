@@ -22,6 +22,13 @@ if [[ ! -d /site/.git ]] ; then
   git clone $GIT_REPOSITORY_SITE /site
 fi
 
+# The presence of a lock means somebody else did not finish
+# Probably because the container got stopped
+# We need to clear the lock so our git commands can execute
+if [[ -f /site/.git/index.lock ]] ; then
+  rm -f /site/.git/index.lock
+fi
+
 # Change into the site directory
 cd /site
 
