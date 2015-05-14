@@ -23,8 +23,9 @@ if [[ ! -d /site/.git ]] ; then
 fi
 
 # The presence of a lock means somebody else did not finish
-# Probably because the container got stopped
 # We need to clear the lock so our git commands can execute
+# Saw this when the host disk filled, hopefully should not need this
+# But it allows us to recoever without deleting the container
 if [[ -f /site/.git/index.lock ]] ; then
   rm -f /site/.git/index.lock
 fi
