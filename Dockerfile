@@ -39,12 +39,13 @@ RUN apt-get update && \
       bison \
       libffi-dev \
     && \
-    apt-get clean && \
-    curl -L https://get.rvm.io | bash -s stable && \
+    apt-get clean
+
+RUN curl -L https://get.rvm.io | bash -s stable && \
     source ~/.rvm/scripts/rvm && \
     rvm install 2.2.3 && \
     rvm use 2.2.3 --default && \
-    ruby -v && \
+    ruby -v
 
 # Port where we serve the files
 EXPOSE 4000
