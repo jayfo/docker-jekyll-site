@@ -35,6 +35,7 @@ RUN apt-get update && \
     apt-add-repository ppa:brightbox/ruby-ng && \
     apt-get update && \
     apt-get install -y ruby2.2 && \
+    apt-get install -y ruby2.2-dev && \
     apt-get install -y ruby-switch && \
     ruby-switch --list && \
     ruby-switch --set ruby2.2 && \
