@@ -44,8 +44,7 @@ RUN apt-get update && \
 RUN curl -L https://get.rvm.io | bash -s stable && \
     source ~/.rvm/scripts/rvm && \
     rvm install 2.2.3 && \
-    rvm use 2.2.3 --default && \
-    ruby -v
+    rvm use 2.2.3 --default 
 
 # Port where we serve the files
 EXPOSE 4000
