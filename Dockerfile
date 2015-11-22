@@ -29,30 +29,27 @@ RUN apt-get update && \
     && \
     apt-get clean
 
+# Install Ruby
+RUN apt-get update && \
+    apt-get install software-properties-common && \
+    apt-add-repository ppa:brightbox/ruby-ng && \
+    apt-get update && \
+    apt-get install ruby2.2 && \
+    apt-get install ruby-switch && \
+    ruby-switch --list && \
+    ruby-switch --set ruby2.2.3 && \
+    ruby -v
+
 RUN apt-get update && \
     apt-get install -y \
-      git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties libffi-dev \
-      libgdbm-dev \
-      libncurses5-dev \
-      automake \
-      libtool \
-      bison \
-      libffi-dev \
+      node \
+      python3 \
+      python3-pip \
+      python3.4-venv \
+      ruby \
+      ruby-dev \
     && \
     apt-get clean
-
-RUN cd && \
-    git clone git://github.com/sstephenson/rbenv.git .rbenv && \
-    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && \
-    echo 'eval "$(rbenv init -)"' >> ~/.bashrc && \
-    exec $SHELL && \
-    git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build  && \
-    echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc  && \
-    exec $SHELL  && \
-    git clone https://github.com/sstephenson/rbenv-gem-rehash.git ~/.rbenv/plugins/rbenv-gem-rehash  && \
-    rbenv install 2.2.3  && \
-    rbenv global 2.2.3  && \
-    ruby -v
 
 # Port where we serve the files
 EXPOSE 4000
