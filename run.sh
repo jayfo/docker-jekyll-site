@@ -39,8 +39,8 @@ git fetch --all
 git checkout --force origin/master
 
 # Create a Python virtual environment, so that 'python' will be what we expect, install invoke
-python3 -m venv env34
-source env34/bin/activate
+python3.5 -m venv env35
+source env35/bin/activate
 pip install invoke
 
 # Build our site
