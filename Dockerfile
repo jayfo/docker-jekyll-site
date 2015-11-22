@@ -22,6 +22,7 @@ RUN apt-get update && \
     apt-get install -y \
       node \
       python3-pip \
+      virtualenv \
       ruby \
       ruby-dev \
     && \
@@ -29,8 +30,8 @@ RUN apt-get update && \
 
 # Create a Python virtual environment, so that 'python' will be what we expect
 # Install invoke while we're at it
-RUN python3 -m venv env35 && \
-    source env35/bin/activate && \
+RUN virtualenv-3.4 env34 && \
+    source env34/bin/activate && \
     pip install invoke
 
 # Port where we serve the files
