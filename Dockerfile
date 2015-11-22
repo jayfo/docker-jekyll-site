@@ -26,7 +26,7 @@ RUN apt-get update && \
 #    && \
 #    apt-get clean
 
-RUN add-apt-repository ppa:fkrull/deadsnakes && \
+RUN apt-add-repository ppa:fkrull/deadsnakes && \
     apt-get update && \
     apt-get install -y python3.5 &&\
     apt-get clean
