@@ -21,15 +21,14 @@ RUN apt-get update && \
 RUN apt-get update && \
     apt-get install -y \
       node \
-      python-pygments \
+      python3-pip \
       ruby \
       ruby-dev \
     && \
     apt-get clean
 
-# Install jekyll
-RUN gem install \
-      jekyll
+# Install invoke
+RUN pip install invoke
 
 # Port where we serve the files
 EXPOSE 4000

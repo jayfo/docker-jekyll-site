@@ -39,7 +39,7 @@ git fetch --all
 git checkout --force origin/master
 
 # Build our site
-jekyll build
+invoke build
 
 # If we have a publish configuration, then we do that, otherwise we serve ourselves
 if [[ -f /publish.yml ]] ; then
