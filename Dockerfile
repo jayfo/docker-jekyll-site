@@ -18,13 +18,17 @@ RUN apt-get update && \
     apt-get clean
 
 # Install Python
-RUN apt-get update && \
-    apt-get install -y \
-      node \
-      python3 \
-      python3-pip \
-      python3.4-venv \
-    && \
+# RUN apt-get update && \
+#    apt-get install -y \
+#      python3 \
+#      python3-pip \
+#      python3.4-venv \
+#    && \
+#    apt-get clean
+
+RUN add-apt-repository ppa:fkrull/deadsnakes && \
+    apt-get update && \
+    apt-get install -y python3.5 &&\
     apt-get clean
 
 # Install Ruby
