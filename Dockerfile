@@ -29,6 +29,15 @@ RUN apt-get update && \
     && \
     apt-get clean
 
+RUN apt-get update && \
+    apt-get install libgdbm-dev libncurses5-dev automake libtool bison libffi-dev && \
+    apt-get clean && \
+    curl -L https://get.rvm.io | bash -s stable && \
+    source ~/.rvm/scripts/rvm && \
+    rvm install 2.2.3 && \
+    rvm use 2.2.3 --default && \
+    ruby -v && \
+
 # Port where we serve the files
 EXPOSE 4000
 
