@@ -37,7 +37,7 @@ RUN apt-get update && \
     apt-get install -y ruby2.2 && \
     apt-get install -y ruby-switch && \
     ruby-switch --list && \
-    ruby-switch --set ruby2.2.3 && \
+    ruby-switch --set ruby2.2 && \
     ruby -v
 
 RUN apt-get update && \
