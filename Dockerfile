@@ -41,11 +41,17 @@ RUN apt-get update && \
     && \
     apt-get clean
 
-RUN gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
-    curl -L https://get.rvm.io | bash -s stable && \
-    . ~/.rvm/scripts/rvm && \
-    rvm install 2.2.3 && \
-    rvm use 2.2.3 --default
+RUN git clone git://github.com/sstephenson/rbenv.git .rbenv && \
+    echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc && \
+    echo 'eval "$(rbenv init -)"' >> ~/.bashrc && \
+    exec $SHELL && \
+    git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build  && \
+    echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc  && \
+    exec $SHELL  && \
+    git clone https://github.com/sstephenson/rbenv-gem-rehash.git ~/.rbenv/plugins/rbenv-gem-rehash  && \
+    rbenv install 2.2.3  && \
+    rbenv global 2.2.3  && \
+    ruby -v
 
 # Port where we serve the files
 EXPOSE 4000
@@ -61,3 +67,4 @@ RUN chmod a+x /tmp/run.sh
 # Run the wrapper script
 CMD ["/tmp/run.sh"]
 
+http://stackoverflow.com/a/9056395/497756
