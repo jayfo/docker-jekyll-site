@@ -30,9 +30,10 @@ RUN apt-get update && \
     apt-get clean
 
 # Create a Python virtual environment, so that 'python' will be what we expect
-# Install invoke while we're at it
-RUN python3 -m venv env34 && \
-    source env34/bin/activate && \
+# Install invoke while we are at it
+RUN python3 -m venv env34
+
+RUN source env34/bin/activate && \
     pip install invoke
 
 # Port where we serve the files
