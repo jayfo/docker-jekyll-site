@@ -17,38 +17,41 @@ RUN apt-get update && \
     && \
     apt-get clean
 
-# Install the packages we need for Jekyll
+# Install Python
 RUN apt-get update && \
     apt-get install -y \
       node \
       python3 \
       python3-pip \
       python3.4-venv \
-      ruby \
-      ruby-dev \
     && \
     apt-get clean
 
 # Install Ruby
 RUN apt-get update && \
-    apt-get install -y software-properties-common && \
+    apt-get install -y \
+      software-properties-common \
+    && \
     apt-add-repository ppa:brightbox/ruby-ng && \
     apt-get update && \
-    apt-get install -y ruby2.2 && \
-    apt-get install -y ruby2.2-dev && \
-    apt-get install -y ruby-switch && \
+    apt-get install -y \
+      ruby2.2 \
+      ruby2.2-dev \
+      ruby-switch \
+    && \
     ruby-switch --list && \
     ruby-switch --set ruby2.2 && \
-    ruby -v
+    apt-get clean
 
+# Install Node.js
 RUN apt-get update && \
     apt-get install -y \
-      node \
-      python3 \
-      python3-pip \
-      python3.4-venv \
-      ruby \
-      ruby-dev \
+      curl \
+    && \
+    curl -sL https://deb.nodesource.com/setup | sudo bash - && \
+    apt-get update && \
+    apt-get install -y \
+      nodejs \
     && \
     apt-get clean
 
