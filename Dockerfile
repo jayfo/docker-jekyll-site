@@ -64,5 +64,3 @@ RUN chmod a+x /tmp/run.sh
 
 # Run the wrapper script
 CMD ["/tmp/run.sh"]
-
-http://stackoverflow.com/a/9056395/497756
