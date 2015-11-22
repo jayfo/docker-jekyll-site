@@ -32,7 +32,10 @@ RUN apt-get update && \
     && \
     apt-add-repository ppa:fkrull/deadsnakes && \
     apt-get update && \
-    apt-get install -y python3.5 &&\
+    apt-get install -y \
+      python3.5 \
+      python-virtualenv \
+    &&\
     apt-get clean
 
 # Install Ruby
@@ -61,6 +64,7 @@ RUN apt-get update && \
     apt-get install -y \
       nodejs \
     && \
+    npm install npm -g && \
     apt-get clean
 
 # Port where we serve the files

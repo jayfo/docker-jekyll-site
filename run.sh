@@ -39,7 +39,7 @@ git fetch --all
 git checkout --force origin/master
 
 # Create a Python virtual environment, so that 'python' will be what we expect, install invoke
-python3.5 -m venv env35
+virtualenv -p python3.5 env35
 source env35/bin/activate
 pip install invoke
 
