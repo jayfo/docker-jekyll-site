@@ -42,6 +42,7 @@ git checkout --force origin/master
 if [[ ! -d env35 ]] ; then
   virtualenv -p python3.5 env35
 fi
+
 source env35/bin/activate
 pip install invoke
 
