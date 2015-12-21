@@ -71,6 +71,6 @@ if [[ -f /publish.yml ]] ; then
 else
   # Launch our server, making it the process to ensure Docker behaves
   # http://www.projectatomic.io/docs/docker-image-author-guidance/
-  exec jekyll serve --host 0.0.0.0
+  invoke serve
 fi
 
