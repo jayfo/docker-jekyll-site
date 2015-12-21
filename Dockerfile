@@ -1,8 +1,8 @@
 FROM ubuntu:14.04
 
 # Unicode command line
-export LANG=C.UTF-8
-export LC_ALL=C.UTF-8
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8"
 
 # Install the packages we need for getting things done
 RUN apt-get update && \
