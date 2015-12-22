@@ -47,7 +47,7 @@ source env35/bin/activate
 pip install invoke
 
 # Build our site
-invoke build
+invoke build_production
 
 # If we have a publish configuration, then we do that, otherwise we serve ourselves
 if [[ -f /publish.yml ]] ; then
