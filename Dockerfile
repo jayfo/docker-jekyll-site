@@ -43,20 +43,26 @@ RUN apt-get update && \
     apt-get clean
 
 # Install Ruby
-RUN apt-get update && \
-    apt-get install -y \
-      software-properties-common \
-    && \
-    apt-add-repository ppa:brightbox/ruby-ng && \
-    apt-get update && \
-    apt-get install -y \
-      ruby2.2 \
-      ruby2.2-dev \
-      ruby-switch \
-    && \
-    ruby-switch --list && \
-    ruby-switch --set ruby2.2 && \
-    apt-get clean
+RUN \curl -L https://get.rvm.io | bash -s stable && \
+    source ~/.rvm/scripts/rvm && \
+    rvm requirements && \
+    rvm install 2.2.3 && \
+    rvm use 2.2.3
+    
+# RUN apt-get update && \
+#     apt-get install -y \
+#       software-properties-common \
+#     && \
+#     apt-add-repository ppa:brightbox/ruby-ng && \
+#     apt-get update && \
+#     apt-get install -y \
+#       ruby2.2 \
+#       ruby2.2-dev \
+#       ruby-switch \
+#     && \
+#     ruby-switch --list && \
+#     ruby-switch --set ruby2.2 && \
+#     apt-get clean
 
 # Install Node.js
 RUN apt-get update && \
