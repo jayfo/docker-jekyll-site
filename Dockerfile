@@ -46,8 +46,7 @@ RUN apt-get update && \
 # Install Ruby
 RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
     \curl -L https://get.rvm.io | bash -s stable && \
-    echo $SHELL && \
-    . source /etc/profile.d/rvm.sh && \
+    . /etc/profile.d/rvm.sh && \
     rvm install 2.2.3 && \
     rvm use 2.2.3
     
