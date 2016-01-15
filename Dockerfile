@@ -31,17 +31,17 @@ RUN apt-get update && \
 #    && \
 #    apt-get clean
 
-#RUN apt-get update && \
-#    apt-get install -y \
-#      software-properties-common \
-#    && \
-#    apt-add-repository ppa:fkrull/deadsnakes && \
-#    apt-get update && \
-#    apt-get install -y \
-#      python3.5 \
-#      python-virtualenv \
-#    &&\
-#    apt-get clean
+RUN apt-get update && \
+    apt-get install -y \
+      software-properties-common \
+    && \
+    apt-add-repository ppa:fkrull/deadsnakes && \
+    apt-get update && \
+    apt-get install -y \
+      python3.5 \
+      python-virtualenv \
+    &&\
+    apt-get clean
 
 # Install Ruby
 #RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
