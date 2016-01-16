@@ -38,13 +38,11 @@ cd /site
 git fetch --all
 git checkout --force origin/master
 
-# Create a Python virtual environment, so that 'python' will be what we expect, install invoke
-if [[ ! -d env35 ]] ; then
-  virtualenv -p python3.5 env35
-fi
+# Activate our Python
+source /virtualenvs/env35/bin/activate
 
-source env35/bin/activate
-pip install invoke
+# Activate our Ruby
+source /etc/profile.d/rvm.sh
 
 # Build our site
 invoke build_production

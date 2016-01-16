@@ -4,6 +4,10 @@ FROM ubuntu:14.04
 ENV LANG="C.UTF-8" \
     LC_ALL="C.UTF-8"
 
+# Use bash instead of sh, fix stdin tty messages
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
+    sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
+
 # Install the packages we need for getting things done
 RUN apt-get update && \
     apt-get install -y \
@@ -11,6 +15,7 @@ RUN apt-get update && \
       curl \
       dos2unix \
       git \
+      software-properties-common \
     && \
     apt-get clean
 
@@ -23,47 +28,35 @@ RUN apt-get update && \
     apt-get clean
 
 # Install Python
-# RUN apt-get update && \
-#    apt-get install -y \
-#      python3 \
-#      python3-pip \
-#      python3.4-venv \
-#    && \
-#    apt-get clean
-
-RUN apt-get update && \
-    apt-get install -y \
-      software-properties-common \
-    && \
-    apt-add-repository ppa:fkrull/deadsnakes && \
+RUN apt-add-repository ppa:fkrull/deadsnakes && \
     apt-get update && \
     apt-get install -y \
       python3.5 \
       python-virtualenv \
-    &&\
-    apt-get clean
+    && \
+    apt-get clean && \
+    \
+    virtualenv -p python3.5 /virtualenvs/env35 && \
+    source /virtualenvs/env35/bin/activate && \
+    pip install -U pip && \
+    pip install invoke
 
 # Install Ruby
-#RUN command curl -sSL https://rvm.io/mpapis.asc | gpg --import - && \
-#    \curl -L https://get.rvm.io | bash -s stable && \
-#    /usr/local/rvm/bin/rvm-shell -c "rvm requirements" && \
-#    /usr/local/rvm/bin/rvm-shell -c "rvm install 2.2.3" && \
-#    /usr/local/rvm/bin/rvm-shell -c "rvm use 2.2.3"
-    
-RUN apt-get update && \
-    apt-get install -y \
-      software-properties-common \
-    && \
-    apt-add-repository ppa:brightbox/ruby-ng && \
+RUN apt-add-repository ppa:brightbox/ruby-ng && \
     apt-get update && \
     apt-get install -y \
-      ruby2.2 \
       ruby2.2-dev \
-      ruby-switch \
     && \
-    ruby-switch --list && \
-    ruby-switch --set ruby2.2 && \
-    apt-get clean
+    apt-get clean && \
+    \
+    gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 && \
+    curl -L https://get.rvm.io | /bin/bash -s stable && \
+    echo 'source /etc/profile.d/rvm.sh' >> /etc/profile && \
+    /bin/bash -l -c "rvm requirements" && \
+    /bin/bash -l -c "rvm install 2.2.3" && \
+    /bin/bash -l -c "rvm use --default 2.2.3" && \
+    /bin/bash -l -c "gem install bundler" && \
+    /bin/bash -l -c "rvm cleanup all"
 
 # Install Node.js
 RUN apt-get update && \
