@@ -6,6 +6,11 @@ if [[ ! -n $GIT_REPOSITORY_SITE ]] ; then
   exit 1
 fi
 
+# Ensure our branch is defined
+if [[ ! -n $GIT_REPOSITORY_SITE_BRANCH ]] ; then
+  GIT_REPOSITORY_SITE_BRANCH="master"
+fi
+
 # If we have an existing repository, but not the right one, we need to start from scratch
 GIT_REPOSITORY_EXISTING=$(git --git-dir=/site/.git remote -v | grep -m 1 origin | awk -F'[ \t]' '{print $2}')
 echo "Desired Repository: $GIT_REPOSITORY_SITE"
@@ -25,7 +30,8 @@ fi
 # The presence of a lock means somebody else did not finish
 # We need to clear the lock so our git commands can execute
 # Saw this when the host disk filled, hopefully should not need this
-# But it allows us to recoever without deleting the container
+# But it allows us to recover without needing to explicitly detect
+# this situation and delete the container
 if [[ -f /site/.git/index.lock ]] ; then
   rm -f /site/.git/index.lock
 fi
@@ -36,7 +42,7 @@ cd /site
 # Ensure we have any site updates
 # http://grimoire.ca/git/stop-using-git-pull-to-deploy
 git fetch --all
-git checkout --force origin/master
+git checkout --force origin/$GIT_REPOSITORY_SITE_BRANCH
 
 # Activate our Python
 source /virtualenvs/env35/bin/activate
