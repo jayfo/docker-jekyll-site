@@ -69,9 +69,9 @@ if [[ -f /publish.yml ]] ; then
   sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST mkdir -p $PUBLISH_STAGING
   sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST mkdir -p $PUBLISH_PUBLISH
   # Upload the files
-  sshpass -p $PUBLISH_PASSWORD rsync -rcv --delete -e "ssh $SSH_OPTIONS" /site/_site $PUBLISH_USER@$PUBLISH_HOST:$PUBLISH_STAGING
+  sshpass -p $PUBLISH_PASSWORD rsync -rcv --delete -e "ssh $SSH_OPTIONS" /site/_site/ $PUBLISH_USER@$PUBLISH_HOST:$PUBLISH_STAGING/
   # Put the files in place
-  sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST rsync -rcv --delete $PUBLISH_STAGING $PUBLISH_PUBLISH
+  sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST rsync -rcv --delete $PUBLISH_STAGING/ $PUBLISH_PUBLISH
 else
   # Launch our server, making it the process to ensure Docker behaves
   # http://www.projectatomic.io/docs/docker-image-author-guidance/
