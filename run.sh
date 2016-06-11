@@ -50,6 +50,9 @@ source /virtualenvs/env35/bin/activate
 # Activate our Ruby
 source /etc/profile.d/rvm.sh
 
+# Ensure we have our Python requirements, invoke will get everything else
+python -m pip install -r requirements3.txt
+
 # Build our site
 invoke build_production
 
