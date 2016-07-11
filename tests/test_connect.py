@@ -1,7 +1,6 @@
 import os
 import requests
 import subprocess
-import sys
 import unittest
 
 
@@ -30,6 +29,8 @@ class TestConnect(unittest.TestCase):
                 BASE_DOCKER_IP
             )
         )
+
+        print(response.content)
 
         self.assertEqual(
             response.status_code,
