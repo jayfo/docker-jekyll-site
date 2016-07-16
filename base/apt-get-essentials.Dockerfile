@@ -1,22 +1,4 @@
 #
-# This file compiled from Dockerfile.in.
-#
-
-FROM ubuntu:14.04
-
-#
-# Environment configurations to get everything to play well
-#
-
-# Unicode command line
-ENV LANG="C.UTF-8" \
-    LC_ALL="C.UTF-8"
-
-# Use bash instead of sh, fix stdin tty messages
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
-    sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
-
-#
 # Install the packages we need for getting things done
 #
 # Based on: https://hub.docker.com/_/buildpack-deps/
@@ -82,4 +64,3 @@ RUN apt-get -qq clean && \
         dos2unix \
     && \
     apt-get -qq clean
-
