@@ -1,0 +1,7 @@
+main:
+  build: ..
+
+nginxproxy:
+  image: "nginx"
+  ports:
+    - "80:80"
