@@ -1,7 +1,30 @@
-main:
+test_serve:
+  container_name: test_serve
   build: ..
-
-nginxproxy:
-  image: "nginx"
+  environment:
+    GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   ports:
-    - "80:80"
+    - "80:4000"
+
+test_publish_ssh:
+  container_name: test_publish_ssh
+  build: ..
+  environment:
+    GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
+  volumes:
+    - "{{ CWD }}/tests/test-config/publish_ssh.yml:/docker-jekyll-site/publish_ssh.yml"
+    - "{{ CWD }}/tests/test-secrets/publish_ssh_secrets.yml:/docker-jekyll-site/publish_ssh_secrets.yml"
+  links:
+    - test_destination_sshd
+
+test_destination_sshd:
+  container_name: test_destination_sshd
+  build: test_destination_sshd
+
+test_publish_local:
+  container_name: test_publish_local
+  build: ..
+  environment:
+    GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
+  volumes:
+    - "{{ CWD }}/tests/test-config/publish_ssh.yml:/docker-jekyll-site/publish_local.yml"
