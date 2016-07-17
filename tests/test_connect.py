@@ -6,7 +6,7 @@ import unittest
 def setup():
     docker_base.compose_ensure_up(
         'tests/test-compose.yml',
-        'tests_nginx'
+        'tests_serve'
     )
 
 
