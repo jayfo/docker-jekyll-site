@@ -1,7 +1,9 @@
-main:
+tests_main:
+  container_name: tests_main
   build: ..
 
-nginxproxy:
+tests_nginx:
+  container_name: tests_nginx
   image: "nginx"
   ports:
     - "80:80"
