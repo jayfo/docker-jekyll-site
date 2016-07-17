@@ -1,0 +1,4 @@
+publish_ssh:
+  host: test_destination_sshd
+  staging: ~/docker_jekyll_site_publish_ssh_staging/test_publish_ssh
+  publish: /docker_jekyll_site/test_publish_ssh
