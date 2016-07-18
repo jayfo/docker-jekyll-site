@@ -31,7 +31,7 @@ def compose_ensure_up(file_compose, service):
     compose_run(file_compose, 'up -d {}'.format(service))
 
 
-def compose_run(file_compose, compose_command):
+def compose_run(file_compose, compose_command, check_result=True):
     # Parse our compile config
     with open('_compile-config.yml') as f:
         compile_config_yaml = yaml.safe_load(f)
@@ -65,7 +65,38 @@ def compose_run(file_compose, compose_command):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE
     )
-    _check_result(command, result)
+    if check_result:
+        _check_result(command, result)
+
+    return result
+
+
+def docker_run(docker_command, check_result=True):
+    # Parse our compile config
+    with open('_compile-config.yml') as f:
+        compile_config_yaml = yaml.safe_load(f)
+
+    # Assemble our command
+    if 'BASE_DOCKER_ON_TRAVIS' in os.environ:
+        command = 'docker {}'.format(
+            docker_command
+        )
+    else:
+        command = '"{}" "{}" docker {}'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            docker_command
+        )
+
+    # Call the command
+    result = subprocess.run(
+        command,
+        shell=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE
+    )
+    if check_result:
+        _check_result(command, result)
 
     return result
 
