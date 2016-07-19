@@ -82,7 +82,14 @@ if [[ -f /docker-jekyll-site/publish_ssh.yml ]] ; then
   # Put the files in place
   sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST rsync -rcv --delete $PUBLISH_STAGING/ $PUBLISH_PUBLISH/
 elif [[ -f /docker-jekyll-site/publish_local.yml ]] ; then
-  echo local
+  # If we have a local publish configuration, then we do that
+
+  # Parse our publish files
+  dos2unix -n /docker-jekyll-site/publish_local.yml /docker-jekyll-site/publish_local.cleaned.yml
+  PUBLISH_PUBLISH=$(awk '{ if(match($0, /  publish: (.*)/, arr)) print arr[1] }' /docker-jekyll-site/publish_local.cleaned.yml)
+
+  # Rsync the files
+  rsync -rcv --delete /docker-jekyll-site/site/_site/ /docker-jekyll-site/test_publish_local/$PUBLISH_PUBLISH
 else
   # Launch our server, making it the process to ensure Docker behaves
   # http://www.projectatomic.io/docs/docker-image-author-guidance/

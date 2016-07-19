@@ -1,4 +1,4 @@
-tests_serve:
+test_serve:
   container_name: test_serve
   build: ..
   environment:
@@ -6,7 +6,7 @@ tests_serve:
   ports:
     - "80:4000"
 
-tests_publish_ssh:
+test_publish_ssh:
   container_name: test_publish_ssh
   build: ..
   environment:
@@ -15,16 +15,26 @@ tests_publish_ssh:
     - "{{ CWD }}/tests/test-config/publish_ssh.yml:/docker-jekyll-site/publish_ssh.yml"
     - "{{ CWD }}/tests/test-secrets/publish_ssh_secrets.yml:/docker-jekyll-site/publish_ssh_secrets.yml"
   links:
-    - tests_destination_sshd
+    - test_destination_sshd
 
-tests_destination_sshd:
+test_destination_sshd:
   container_name: test_destination_sshd
   build: test_destination_sshd
+  volumes:
+    - "{{ CWD }}/tests/test_destination_sshd/site:/docker-jekyll-site/test_publish_ssh/site"
 
-tests_publish_local:
+test_publish_local:
   container_name: test_publish_local
   build: ..
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   volumes:
-    - "{{ CWD }}/tests/test-config/publish_ssh.yml:/docker-jekyll-site/publish_local.yml"
+    - "{{ CWD }}/tests/test-config/publish_local.yml:/docker-jekyll-site/publish_local.yml"
+    - "volume_publish_local:/docker-jekyll-site/test_publish_local"
+
+test_destination_local:
+  container_name: test_destination_local
+  image: ubuntu:14.04
+  command: tail -f /dev/null
+  volumes:
+    - "volume_publish_local:/docker-jekyll-site/test_publish_local"
