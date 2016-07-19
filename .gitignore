@@ -9,8 +9,8 @@ env35
 # Compiled Python
 *.pyc
 
-# Localized compose files
-tests/test-compose.localized.yml
-
 # Any secrets, such as passwords or keys
 /secrets
+
+# Localized compose files
+tests/test-compose.localized.yml
