@@ -17,4 +17,3 @@ tests/test-compose.localized.yml
 
 # Test destination for site publishing
 tests/test_destination_sshd/site
-

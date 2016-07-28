@@ -31,3 +31,5 @@ jinja2:
       out: requirements3.in
     - in:  .travis.yml.in
       out: .travis.yml
+    - in:  docker-jekyll-site/docker-jekyll-site-entrypoint.sh.in
+      out: docker-jekyll-site/docker-jekyll-site-entrypoint.sh
