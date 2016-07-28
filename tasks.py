@@ -62,6 +62,15 @@ def compile_download_base_dependencies():
 
 
 @invoke.task()
+def compile_requirements():
+    # Compile the requirements file
+    invoke.run(
+        'pip-compile --upgrade --output-file requirements3.txt requirements3.in',
+        encoding=sys.stdout.encoding
+    )
+
+
+@invoke.task()
 def docker_machine_console():
     docker_base.machine_console()
 
