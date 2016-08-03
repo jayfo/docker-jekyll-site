@@ -5,6 +5,6 @@ invoke=={{ local.python.invoke_version }}
 jinja2
 nose
 pip-tools
-pyyaml --global-option='--without-libyaml'
+pyyaml
 requests
 {# This comment gives us a newline at the end of the generated file #}
