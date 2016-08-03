@@ -1,11 +1,38 @@
 import jinja2
 import os
 import subprocess
+import sys
 import yaml
 
 
 def _check_result(command, result):
     if result.returncode != 0:
+        print(
+            (
+                '========================================\n'
+                'Command failed with error code: {}\n'
+                '{}'
+                '\n'
+                '========================================\n'
+                'STDOUT:\n'
+                '========================================\n'
+                '{}'
+                '\n'
+                '========================================\n'
+                'STDERR:\n'
+                '========================================\n'
+                '{}'
+                '\n'
+                '========================================\n'
+            ).format(
+                result.returncode,
+                command,
+                result.stdout,
+                result.stderr
+            ),
+            file=sys.stderr, flush=True
+        )
+
         raise subprocess.CalledProcessError(
             result.returncode,
             command
@@ -59,16 +86,18 @@ def compose_run(file_compose, compose_command, check_result=True):
         )
 
     # Call the command
-    result = subprocess.run(
+    process = subprocess.Popen(
         command,
         shell=True,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
+        universal_newlines=True
     )
-    if check_result:
-        _check_result(command, result)
+    for line in process.stdout:
+        flag_print = line.startswith('Step ')
 
-    return result
+        if flag_print:
+            print(line, end='', flush=True)
 
 
 def docker_run(docker_command, check_result=True):

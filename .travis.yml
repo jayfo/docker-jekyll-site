@@ -35,6 +35,7 @@ install:
   - docker build -f Dockerfile .
 
 script:
-  - invoke docker_machine_start &&
+  - |
+    invoke docker_machine_start
     sleep 15
   - nosetests

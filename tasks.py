@@ -1,7 +1,6 @@
 import tests.docker_base as docker_base
 import invoke
 import jinja2
-import os
 import sys
 import yaml
 
@@ -38,6 +37,15 @@ def compile_config():
         template = jinja2_environment.get_template(jinja2_entry['in'])
         with open(jinja2_entry['out'], 'w') as f:
             f.write(template.render(compile_config_yaml['config']))
+
+
+@invoke.task()
+def compile_requirements():
+    # Compile the requirements file
+    invoke.run(
+        'pip-compile --upgrade --output-file requirements3.txt requirements3.in',
+        encoding=sys.stdout.encoding
+    )
 
 
 @invoke.task()
