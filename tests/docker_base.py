@@ -86,16 +86,18 @@ def compose_run(file_compose, compose_command, check_result=True):
         )
 
     # Call the command
-    result = subprocess.run(
+    process = subprocess.Popen(
         command,
         shell=True,
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE
+        stderr=subprocess.PIPE,
+        universal_newlines=True
     )
-    if check_result:
-        _check_result(command, result)
+    for line in process.stdout:
+        flag_print = line.startswith('Step ')
 
-    return result
+        if flag_print:
+            print(line, end='', flush=True)
 
 
 def docker_run(docker_command, check_result=True):

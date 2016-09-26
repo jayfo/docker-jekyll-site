@@ -1,7 +1,6 @@
 import tests.docker_base as docker_base
 import invoke
 import jinja2
-import os
 import requests
 import sys
 import yaml
