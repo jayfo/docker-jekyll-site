@@ -1,8 +1,11 @@
 config:
   local:
     docker:
-      cmd_bash: C:/Program Files/Git/bin/bash
-      cmd_dockermachine: C:/Program Files/Docker Toolbox/docker-machine.exe
+      cmd_bash_macos: /bin/bash
+      cmd_dockermachine_macos: /usr/local/bin/docker-machine
+
+      cmd_bash_windows: C:/Program Files/Git/bin/bash
+      cmd_dockermachine_windows: C:/Program Files/Docker Toolbox/docker-machine.exe
 
     python:
       version: 3.5
@@ -15,7 +18,7 @@ config:
     travis:
       version: 1.11.2-0~trusty
       compose_version: 1.8.0-rc1
-      compose_up_delay: 15
+      compose_up_delay: 60
 
   dockerfile:
     main:
@@ -23,7 +26,7 @@ config:
       context: .
       base_image: ubuntu:14.04
 
-jinja2:
+compile_config:
   entries:
     - in:  Dockerfile.in
       out: Dockerfile
@@ -31,3 +34,8 @@ jinja2:
       out: requirements3.in
     - in:  .travis.yml.in
       out: .travis.yml
+
+compile_docker_localize:
+  entries:
+    - in:  tests/test-compose.yml
+      out: tests/test-compose.localized.yml
