@@ -7,11 +7,34 @@
 trap '[ "$?" -eq 0 ] || read -p "Error in step ´$STEP´. Press any key."' EXIT
 
 ################################################################################
-# Confirm our Docker Machine and VirtualBox dependencies.
+# Name our virtual machine.
 ################################################################################
 
 VM="${DOCKER_MACHINE_NAME-default}"
-DOCKER_MACHINE="${DOCKER_TOOLBOX_INSTALL_PATH}/docker-machine.exe"
+
+################################################################################
+# Configure our Docker Machine dependency according to our OS.
+################################################################################
+
+if [[ "$OSTYPE" == "msys" ]]; then
+  # Windows with lightweight shell and GNU utilities (part of MinGW)
+  DOCKER_MACHINE="${DOCKER_TOOLBOX_INSTALL_PATH}/docker-machine.exe"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  # Mac OSX
+  DOCKER_MACHINE=/usr/local/bin/docker-machine
+else
+  echo "OSTYPE not recognized."
+  exit 1
+fi
+
+################################################################################
+# Confirm we found our Docker Machine dependency.
+################################################################################
+
+if [ ! -f "${DOCKER_MACHINE}" ]; then
+  echo "Docker Machine not found."
+  exit 1
+fi
 
 ################################################################################
 # Configure the environment for our specific machine.
@@ -36,9 +59,12 @@ echo "For help getting started, check out the docs at https://docs.docker.com"
 echo
 cd
 
-docker () {
-  MSYS_NO_PATHCONV=1 "${DOCKER_TOOLBOX_INSTALL_PATH}/docker.exe" "$@"
-}
-export -f docker
+if [[ "$OSTYPE" == "msys" ]]; then
+  # Windows with lightweight shell and GNU utilities (part of MinGW)
+  docker () {
+    MSYS_NO_PATHCONV=1 "${DOCKER_TOOLBOX_INSTALL_PATH}/docker.exe" "$@"
+  }
+  export -f docker
+fi
 
 exec "$BASH" --login -i

@@ -1,4 +1,3 @@
-import jinja2
 import os
 import subprocess
 import sys
@@ -39,19 +38,6 @@ def _check_result(command, result):
         )
 
 
-def _compose_localize(file_compose, file_compose_localized):
-    # Compile our test compose configuration into a localized version
-    jinja2_environment = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(searchpath='.'),
-        undefined=jinja2.StrictUndefined
-    )
-    template = jinja2_environment.get_template(file_compose)
-    with open(file_compose_localized, 'w') as f:
-        f.write(template.render({
-            'CWD': os.path.normpath(os.getcwd()).replace('\\', '/')
-        }))
-
-
 def compose_ensure_up(file_compose, service):
     machine_ensure()
     compose_run(file_compose, 'build {}'.format(service))
@@ -63,27 +49,28 @@ def compose_run(file_compose, compose_command, check_result=True):
     with open('_compile-config.yml') as f:
         compile_config_yaml = yaml.safe_load(f)
 
-    # Localize our compose file
-    file_compose_localized = '{}{}{}'.format(
-        os.path.splitext(file_compose)[0],
-        '.localized',
-        os.path.splitext(file_compose)[1]
-    )
-    _compose_localize(file_compose, file_compose_localized)
-
-    # Assemble our command
+    # Assemble our command according to our OS
     if 'BASE_DOCKER_ON_TRAVIS' in os.environ:
         command = 'docker-compose -f "{}" {}'.format(
-            file_compose_localized,
+            file_compose,
+            compose_command
+        )
+    elif sys.platform == 'darwin':
+        command = '"{}" "{}" docker-compose -f "{}" {}'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            os.path.normpath(os.path.join(os.getcwd(), file_compose)).replace('\\', '/'),
+            compose_command
+        )
+    elif sys.platform == 'win32':
+        command = '"{}" "{}" docker-compose -f "{}" {}'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            os.path.normpath(os.path.join(os.getcwd(), file_compose)).replace('\\', '/'),
             compose_command
         )
     else:
-        command = '"{}" "{}" docker-compose -f "{}" {}'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
-            os.path.normpath(os.path.join(os.getcwd(), file_compose_localized)).replace('\\', '/'),
-            compose_command
-        )
+        raise Exception()
 
     # Call the command
     process = subprocess.Popen(
@@ -105,17 +92,25 @@ def docker_run(docker_command, check_result=True):
     with open('_compile-config.yml') as f:
         compile_config_yaml = yaml.safe_load(f)
 
-    # Assemble our command
+    # Assemble our command according to our OS
     if 'BASE_DOCKER_ON_TRAVIS' in os.environ:
         command = 'docker {}'.format(
             docker_command
         )
-    else:
+    elif sys.platform == 'darwin':
         command = '"{}" "{}" docker {}'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash'],
+            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
             os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
             docker_command
         )
+    elif sys.platform == 'win32':
+        command = '"{}" "{}" docker {}'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            docker_command
+        )
+    else:
+        raise Exception()
 
     # Call the command
     result = subprocess.run(
@@ -135,15 +130,24 @@ def machine_console():
     with open('_compile-config.yml') as f:
         compile_config_yaml = yaml.safe_load(f)
 
-    # Assemble our command
-    command = 'cmd /c start "{}" "{}"'.format(
-        compile_config_yaml['config']['local']['docker']['cmd_bash'],
-        os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_console.sh')).replace('\\', '/')
-    )
+    # Assemble our command according to our OS
+    if sys.platform == 'darwin':
+        command = '"{}" "{}"'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_console.sh')).replace('\\', '/')
+        )
+    elif sys.platform == 'win32':
+        command = 'cmd /c start "{}" "{}"'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_console.sh')).replace('\\', '/')
+        )
+    else:
+        raise Exception()
 
     # Call the command, noting that this cannot be piped
     subprocess.run(
-        command
+        command,
+        shell=True
     )
 
 
@@ -156,11 +160,19 @@ def machine_ensure():
     with open('_compile-config.yml') as f:
         compile_config_yaml = yaml.safe_load(f)
 
-    # Assemble our command
-    command = '"{}" "{}"'.format(
-        compile_config_yaml['config']['local']['docker']['cmd_bash'],
-        os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_ensure.sh')).replace('\\', '/')
-    )
+    # Assemble our command according to our OS
+    if sys.platform == 'darwin':
+        command = '"{}" "{}"'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_ensure.sh')).replace('\\', '/')
+        )
+    elif sys.platform == 'win32':
+        command = '"{}" "{}"'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_ensure.sh')).replace('\\', '/')
+        )
+    else:
+        raise Exception()
 
     # Call the command
     result = subprocess.run(
@@ -181,10 +193,17 @@ def ip():
     with open('_compile-config.yml') as f:
         compile_config_yaml = yaml.safe_load(f)
 
-    # Assemble our command
-    command = '"{}" ip default'.format(
-        compile_config_yaml['config']['local']['docker']['cmd_dockermachine']
-    )
+    # Assemble our command according to our OS
+    if sys.platform == 'darwin':
+        command = '"{}" ip default'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_dockermachine_macos']
+        )
+    elif sys.platform == 'win32':
+        command = '"{}" ip default'.format(
+            compile_config_yaml['config']['local']['docker']['cmd_dockermachine_windows']
+        )
+    else:
+        raise Exception()
 
     # Call the command
     result = subprocess.run(
