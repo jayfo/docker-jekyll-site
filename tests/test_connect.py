@@ -4,10 +4,7 @@ import unittest
 
 
 def setup():
-    docker_base.compose_ensure_up(
-        'tests/test-compose.yml',
-        'test_serve'
-    )
+    pass
 
 
 def teardown():
@@ -28,4 +25,3 @@ class TestConnect(unittest.TestCase):
             response.status_code,
             200
         )
-

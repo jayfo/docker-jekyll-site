@@ -7,18 +7,38 @@
 trap '[ "$?" -eq 0 ] || read -p "Error in step ´$STEP´. Press any key."' EXIT
 
 ################################################################################
-# Confirm our Docker Machine and VirtualBox dependencies.
+# Name our virtual machine.
 ################################################################################
 
 VM="${DOCKER_MACHINE_NAME-default}"
-DOCKER_MACHINE="${DOCKER_TOOLBOX_INSTALL_PATH}/docker-machine.exe"
 
-STEP="Looking for vboxmanage.exe"
-if [ ! -z "$VBOX_MSI_INSTALL_PATH" ]; then
-  VBOXMANAGE="${VBOX_MSI_INSTALL_PATH}VBoxManage.exe"
+################################################################################
+# Configure our Docker Machine and VirtualBox dependencies according to our OS.
+################################################################################
+
+if [[ "$OSTYPE" == "msys" ]]; then
+  # Windows with lightweight shell and GNU utilities (part of MinGW)
+  DOCKER_MACHINE="${DOCKER_TOOLBOX_INSTALL_PATH}/docker-machine.exe"
+
+  STEP="Looking for vboxmanage.exe"
+  if [ ! -z "$VBOX_MSI_INSTALL_PATH" ]; then
+    VBOXMANAGE="${VBOX_MSI_INSTALL_PATH}VBoxManage.exe"
+  else
+    VBOXMANAGE="${VBOX_INSTALL_PATH}VBoxManage.exe"
+  fi
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  # Mac OSX
+  DOCKER_MACHINE=/usr/local/bin/docker-machine
+
+  VBOXMANAGE=/Applications/VirtualBox.app/Contents/MacOS/VBoxManage
 else
-  VBOXMANAGE="${VBOX_INSTALL_PATH}VBoxManage.exe"
+  echo "OSTYPE not recognized."
+  exit 1
 fi
+
+################################################################################
+# Confirm we found our Docker Machine and VirtualBox dependencies.
+################################################################################
 
 if [ ! -f "${DOCKER_MACHINE}" ]; then
   echo "Docker Machine not found."
