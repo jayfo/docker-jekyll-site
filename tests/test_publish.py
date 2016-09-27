@@ -1,4 +1,3 @@
-import hashlib
 import os
 import tests.docker_base as docker_base
 import unittest
@@ -9,13 +8,14 @@ import unittest
 # https://denibertovic.com/posts/handling-permissions-with-docker-volumes/
 #
 
+
 def setup():
     docker_base.compose_ensure_up(
-        'tests/test-compose.yml',
+        'tests/test-compose.localized.yml',
         'test_destination_local'
     )
     docker_base.compose_ensure_up(
-        'tests/test-compose.yml',
+        'tests/test-compose.localized.yml',
         'test_destination_sshd'
     )
 
