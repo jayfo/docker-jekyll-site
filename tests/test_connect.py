@@ -4,7 +4,10 @@ import unittest
 
 
 def setup():
-    pass
+    docker_base.compose_ensure_up(
+        'tests/test-compose.localized.yml',
+        'test_nginx'
+    )
 
 
 def teardown():
