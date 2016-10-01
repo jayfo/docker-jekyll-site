@@ -1,4 +1,3 @@
-import hashlib
 import os
 import tests.docker_base as docker_base
 import unittest
@@ -9,13 +8,14 @@ import unittest
 # https://denibertovic.com/posts/handling-permissions-with-docker-volumes/
 #
 
+
 def setup():
     docker_base.compose_ensure_up(
-        'tests/test-compose.yml',
+        'tests/test-compose.localized.yml',
         'test_destination_local'
     )
     docker_base.compose_ensure_up(
-        'tests/test-compose.yml',
+        'tests/test-compose.localized.yml',
         'test_destination_sshd'
     )
 
@@ -69,8 +69,8 @@ class TestPublish(unittest.TestCase):
         )
 
         # Do the build and publish
-        docker_base.compose_run('tests/test-compose.yml', 'build test_publish_local')
-        docker_base.compose_run('tests/test-compose.yml', 'up test_publish_local')
+        docker_base.compose_run('tests/test-compose.localized.yml', 'build test_publish_local')
+        docker_base.compose_run('tests/test-compose.localized.yml', 'up test_publish_local')
 
         # Ensure we find a file we expect
         result = docker_base.docker_run(
@@ -128,8 +128,8 @@ class TestPublish(unittest.TestCase):
         )
 
         # Do the build and publish
-        docker_base.compose_run('tests/test-compose.yml', 'build test_publish_ssh')
-        docker_base.compose_run('tests/test-compose.yml', 'up test_publish_ssh')
+        docker_base.compose_run('tests/test-compose.localized.yml', 'build test_publish_ssh')
+        docker_base.compose_run('tests/test-compose.localized.yml', 'up test_publish_ssh')
 
         # Ensure we find a file we expect
         self.assertTrue(
