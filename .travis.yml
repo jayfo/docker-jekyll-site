@@ -8,7 +8,7 @@ services:
   - docker
 
 python:
-  - "3.5"
+  - "3.5.2"
 
 env:
   - BASE_DOCKER_ON_TRAVIS=true
@@ -37,6 +37,6 @@ install:
 
 script:
   - |
-    invoke docker_machine_start
+    invoke docker_start
     sleep 60
   - nosetests
