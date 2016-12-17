@@ -1,4 +1,4 @@
-This is a scaffold for projects that use Docker in their testing.
+This is a base for building projects that primarily constitute a Dockerfile.
 
 # Testing with Docker
 
