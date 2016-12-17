@@ -1,9 +1,10 @@
-import tests.docker_base as docker_base
 import invoke
 import jinja2
 import os
 import sys
 import yaml
+
+import base.docker_base as docker_base
 
 
 def check_result(result, description):
@@ -50,22 +51,22 @@ def compile_requirements():
 
 
 @invoke.task()
-def docker_machine_console():
-    docker_base.machine_console()
-
-
-@invoke.task()
-def docker_machine_ensure():
+def docker_ensure_machine():
     docker_base.machine_ensure()
 
 
-@invoke.task()
-def docker_machine_ip():
+@invoke.task(pre=[docker_ensure_machine])
+def docker_console():
+    docker_base.machine_console()
+
+
+@invoke.task(pre=[docker_ensure_machine])
+def docker_ip():
     print(docker_base.ip())
 
 
-@invoke.task(pre=[docker_machine_ensure])
-def docker_machine_docker_localize():
+@invoke.task(pre=[docker_ensure_machine])
+def docker_localize():
     # Parse our compile config
     with open('_compile-config.yml') as f:
         compile_config_yaml = yaml.safe_load(f)
@@ -84,13 +85,13 @@ def docker_machine_docker_localize():
             }))
 
 
-@invoke.task(pre=[docker_machine_docker_localize])
-def docker_machine_start():
+@invoke.task(pre=[docker_localize])
+def docker_start():
     docker_base.compose_run('tests/test-compose.localized.yml', 'build')
     docker_base.compose_run('tests/test-compose.localized.yml', 'up -d')
 
 
-@invoke.task(pre=[docker_machine_docker_localize])
+@invoke.task(pre=[docker_localize])
 def docker_machine_stop():
     docker_base.compose_run('tests/test-compose.localized.yml', 'stop')
 

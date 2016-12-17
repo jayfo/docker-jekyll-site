@@ -57,15 +57,15 @@ def compose_run(file_compose, compose_command, check_result=True):
         )
     elif sys.platform == 'darwin':
         command = '"{}" "{}" docker-compose -f "{}" {}'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            compile_config_yaml['config']['local']['docker_toolbox']['macos']['cmd_bash'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker_scripts/docker_bash.sh')).replace('\\', '/'),
             os.path.normpath(os.path.join(os.getcwd(), file_compose)).replace('\\', '/'),
             compose_command
         )
     elif sys.platform == 'win32':
         command = '"{}" "{}" docker-compose -f "{}" {}'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            compile_config_yaml['config']['local']['docker_toolbox']['windows']['cmd_bash'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker_scripts/docker_bash.sh')).replace('\\', '/'),
             os.path.normpath(os.path.join(os.getcwd(), file_compose)).replace('\\', '/'),
             compose_command
         )
@@ -99,14 +99,14 @@ def docker_run(docker_command, check_result=True):
         )
     elif sys.platform == 'darwin':
         command = '"{}" "{}" docker {}'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            compile_config_yaml['config']['local']['docker_toolbox']['macos']['cmd_bash'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker_scripts/docker_bash.sh')).replace('\\', '/'),
             docker_command
         )
     elif sys.platform == 'win32':
         command = '"{}" "{}" docker {}'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_bash.sh')).replace('\\', '/'),
+            compile_config_yaml['config']['local']['docker_toolbox']['windows']['cmd_bash'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker_scripts/docker_bash.sh')).replace('\\', '/'),
             docker_command
         )
     else:
@@ -133,13 +133,13 @@ def machine_console():
     # Assemble our command according to our OS
     if sys.platform == 'darwin':
         command = '"{}" "{}"'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_console.sh')).replace('\\', '/')
+            compile_config_yaml['config']['local']['docker_toolbox']['macos']['cmd_bash'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker_scripts/docker_console.sh')).replace('\\', '/')
         )
     elif sys.platform == 'win32':
         command = 'cmd /c start "{}" "{}"'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_console.sh')).replace('\\', '/')
+            compile_config_yaml['config']['local']['docker_toolbox']['windows']['cmd_bash'],
+            os.path.normpath(os.path.join(os.getcwd(), 'base/docker_scripts/docker_console.sh')).replace('\\', '/')
         )
     else:
         raise Exception()
@@ -163,13 +163,19 @@ def machine_ensure():
     # Assemble our command according to our OS
     if sys.platform == 'darwin':
         command = '"{}" "{}"'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_macos'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_ensure.sh')).replace('\\', '/')
+            compile_config_yaml['config']['local']['docker_toolbox']['macos']['cmd_bash'],
+            os.path.normpath(os.path.join(
+                os.getcwd(),
+                'base/docker_scripts/docker_ensure_machine.sh'
+            )).replace('\\', '/')
         )
     elif sys.platform == 'win32':
         command = '"{}" "{}"'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_bash_windows'],
-            os.path.normpath(os.path.join(os.getcwd(), 'base/docker-machine/machine_ensure.sh')).replace('\\', '/')
+            compile_config_yaml['config']['local']['docker_toolbox']['windows']['cmd_bash'],
+            os.path.normpath(os.path.join(
+                os.getcwd(),
+                'base/docker_scripts/docker_ensure_machine.sh'
+            )).replace('\\', '/')
         )
     else:
         raise Exception()
@@ -196,11 +202,11 @@ def ip():
     # Assemble our command according to our OS
     if sys.platform == 'darwin':
         command = '"{}" ip default'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_dockermachine_macos']
+            compile_config_yaml['config']['local']['docker_toolbox']['macos']['cmd_dockermachine']
         )
     elif sys.platform == 'win32':
         command = '"{}" ip default'.format(
-            compile_config_yaml['config']['local']['docker']['cmd_dockermachine_windows']
+            compile_config_yaml['config']['local']['docker_toolbox']['windows']['cmd_dockermachine']
         )
     else:
         raise Exception()
