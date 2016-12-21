@@ -1,7 +1,9 @@
 config:
   local:
     docker_toolbox:
-      version: 1.12.5
+      version: 1.12.3
+      # Docker Toolbox is currently pinned by this bug:
+      #   https://github.com/docker/toolbox/issues/607
       macos:
         cmd_bash: /bin/bash
         cmd_dockermachine: /usr/local/bin/docker-machine
@@ -16,19 +18,13 @@ config:
       #   https://github.com/pyinvoke/invoke/issues/345
       invoke_version: 0.12.2
 
-  travis:
-    docker:
-      version: 1.11.2-0~trusty
-      compose_version: 1.8.0-rc1
-      compose_up_delay: 60
-
   readme:
     working_directory: c:/devel/testwithdocker-base
 
     docker_toolbox_versions:
-      - version: 1.12.5
+      - version: 1.12.3
         windows:
-          installer_url: https://github.com/docker/toolbox/releases/download/v1.12.5/DockerToolbox-1.12.5.exe
+          installer_url: https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe
           install_path: c:/Program Files/Docker Toolbox
 
     python_versions:
@@ -37,6 +33,12 @@ config:
         install_path: c:/Python35
         virtual_environment_name: env35
         requirements_name: requirements3.txt
+
+  travis:
+    docker:
+      version: 1.11.2-0~trusty
+      compose_version: 1.8.0-rc1
+      compose_up_delay: 60
 
 compile_config:
   entries:
