@@ -139,8 +139,6 @@ RUN cd /usr/local/bin \
 #
 # Install Ruby
 #
-# Based on:  https://hub.docker.com/_/ruby/
-#
 
 RUN wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz && \
     mkdir /usr/src/ruby-install && \
@@ -176,7 +174,7 @@ RUN ruby-install --no-reinstall ruby 2.3.1 && \
 ENV NODE_VERSION 5.1.0
 
 ################################################################################
-# On 12/20/16, experiencing issues with keyservers
+# On 12/20/16, experiencing issues with keyservers. Signature check disabled.
 ################################################################################
 
 # GPG keys listed at https://github.com/nodejs/node
@@ -199,7 +197,7 @@ ENV NODE_VERSION 5.1.0
 ENV NPM_CONFIG_LOGLEVEL info
 
 ################################################################################
-# On 12/20/16, experiencing issues with keyservers
+# On 12/20/16, experiencing issues with keyservers. Signature check disabled.
 ################################################################################
 
 # RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" && \
