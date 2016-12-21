@@ -1,5 +1,5 @@
 import os
-import tests.docker_base as docker_base
+import base.docker_base as docker_base
 import unittest
 
 #
@@ -10,14 +10,7 @@ import unittest
 
 
 def setup():
-    docker_base.compose_ensure_up(
-        'tests/test-compose.localized.yml',
-        'test_destination_local'
-    )
-    docker_base.compose_ensure_up(
-        'tests/test-compose.localized.yml',
-        'test_destination_sshd'
-    )
+    pass
 
 
 def teardown():
@@ -25,6 +18,8 @@ def teardown():
 
 
 class TestPublish(unittest.TestCase):
+    TEST_FILE = 'css/base/bar/styles.css'
+
     def test_publish_local(self):
         # Ensure the target directory exists
         docker_base.docker_run(
@@ -41,7 +36,7 @@ class TestPublish(unittest.TestCase):
         # Ensure the file we expect is not already there
         result = docker_base.docker_run(
             'exec test_destination_local '
-            'ls /docker-jekyll-site/test_publish_local/site/css/base/styles.css',
+            'ls /docker-jekyll-site/test_publish_local/site/{}'.format(TestPublish.TEST_FILE),
             check_result=False
         )
         self.assertNotEqual(
@@ -75,7 +70,7 @@ class TestPublish(unittest.TestCase):
         # Ensure we find a file we expect
         result = docker_base.docker_run(
             'exec test_destination_local '
-            'ls /docker-jekyll-site/test_publish_local/site/css/base/styles.css',
+            'ls /docker-jekyll-site/test_publish_local/site/{}'.format(TestPublish.TEST_FILE),
             check_result=False
         )
         self.assertEqual(
@@ -111,7 +106,7 @@ class TestPublish(unittest.TestCase):
 
         # Ensure the file we expect is not already there
         self.assertFalse(
-            os.path.exists('tests/test_destination_sshd/site/css/base/styles.css'),
+            os.path.exists('tests/test_destination_sshd/site/{}'.format(TestPublish.TEST_FILE)),
             'Could not remove expected file'
         )
 
@@ -133,7 +128,7 @@ class TestPublish(unittest.TestCase):
 
         # Ensure we find a file we expect
         self.assertTrue(
-            os.path.exists('tests/test_destination_sshd/site/css/base/styles.css'),
+            os.path.exists('tests/test_destination_sshd/site/{}'.format(TestPublish.TEST_FILE)),
             'Publish did not create expected file'
         )
 

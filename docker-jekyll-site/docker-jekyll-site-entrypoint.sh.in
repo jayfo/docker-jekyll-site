@@ -34,6 +34,16 @@ ln -s /docker-jekyll-site-temp/node_modules node_modules
 # Ensure we have our python dependencies
 pip install -r requirements3.txt
 
+# Because sites may not be current, their ruby version may not match our system install
+# The Gemfile.lock in our website will tell us what version it's expecting
+RUBY_SYSTEM=$(ruby -v | awk '{ if (match($0, /ruby (.*)p/, arr)) print arr[1] }')
+RUBY_SITE=$(awk '{ if(match($0, /ruby (.*)p/, arr)) print arr[1] }' /docker-jekyll-site/site/Gemfile.lock)
+if [[ "$RUBY_SYSTEM" != "$RUBY_SITE" ]] ; then
+  ruby-install --no-reinstall ruby $RUBY_SITE
+  source /usr/local/share/chruby/chruby.sh
+  chruby ruby-$RUBY_SITE
+fi
+
 # Build our site
 invoke build_production
 
