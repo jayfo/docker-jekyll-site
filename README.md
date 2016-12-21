@@ -8,11 +8,15 @@ This project uses Docker Toolbox to create virtual machines for testing with Doc
 
 Development currently requires:
 
-- Docker Toolbox 1.12.5
+- Docker Toolbox 1.12.3
+
+  Note we are using this version due to a potential bug in 1.12.5, which is unable to mount volumes on Windows.
+
+  [https://github.com/docker/toolbox/issues/607](https://github.com/docker/toolbox/issues/607)
 
   Installation on Windows:
 
-  [https://github.com/docker/toolbox/releases/download/v1.12.5/DockerToolbox-1.12.5.exe](https://github.com/docker/toolbox/releases/download/v1.12.5/DockerToolbox-1.12.5.exe)
+  [https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe](https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe)
 
   During installation:
 
