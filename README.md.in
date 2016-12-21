@@ -11,6 +11,10 @@ Development currently requires:
 
 - Docker Toolbox {{ local.docker_toolbox.version }}
 
+  Note we are using this version due to a potential bug in 1.12.5, which is unable to mount volumes on Windows.
+
+  [https://github.com/docker/toolbox/issues/607](https://github.com/docker/toolbox/issues/607)
+
   {% set install_params_docker_toolbox = {} -%}
   {%- for version_available in readme.docker_toolbox_versions -%}
     {%- if version_available.version == local.docker_toolbox.version -%}

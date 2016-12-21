@@ -7,7 +7,9 @@ config:
 
   local:
     docker_toolbox:
-      version: 1.12.5
+      version: 1.12.3
+      # Docker Toolbox is currently pinned by this bug:
+      #   https://github.com/docker/toolbox/issues/607
       macos:
         cmd_bash: /bin/bash
         cmd_dockermachine: /usr/local/bin/docker-machine
@@ -26,9 +28,9 @@ config:
     working_directory: c:/devel/testwithdocker-base
 
     docker_toolbox_versions:
-      - version: 1.12.5
+      - version: 1.12.3
         windows:
-          installer_url: https://github.com/docker/toolbox/releases/download/v1.12.5/DockerToolbox-1.12.5.exe
+          installer_url: https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe
           install_path: c:/Program Files/Docker Toolbox
 
     python_versions:
