@@ -12,8 +12,8 @@ test_publish_ssh:
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   volumes:
-    - "{{ DOCKER_LOCALIZE_CWD }}/tests/test-config/publish_ssh.yml:/docker-jekyll-site/publish_ssh.yml"
-    - "{{ DOCKER_LOCALIZE_CWD }}/tests/test-secrets/publish_ssh_secrets.yml:/docker-jekyll-site/publish_ssh_secrets.yml"
+    - "{{ DOCKER_LOCALIZE_CWD }}/tests/test-config/publish_ssh.yml:/docker-jekyll-site/publish_ssh.yml:ro"
+    - "{{ DOCKER_LOCALIZE_CWD }}/tests/test-secrets/publish_ssh_secrets.yml:/docker-jekyll-site/publish_ssh_secrets.yml:ro"
   links:
     - test_destination_sshd
 
@@ -29,7 +29,7 @@ test_publish_local:
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   volumes:
-    - "{{ DOCKER_LOCALIZE_CWD }}/tests/test-config/publish_local.yml:/docker-jekyll-site/publish_local.yml"
+    - "{{ DOCKER_LOCALIZE_CWD }}/tests/test-config/publish_local.yml:/docker-jekyll-site/publish_local.yml:ro"
     - "volume_publish_local:/docker-jekyll-site/test_publish_local"
 
 test_destination_local:

@@ -65,7 +65,7 @@ RUN dos2unix /docker-jekyll-site-temp/npm-shrinkwrap.json && \
     cd /docker-jekyll-site-temp && npm install
 
 ################################################################################
-# From before-base.
+# Expose any ports or persistent volumes.
 ################################################################################
 
 # Port where we serve the files

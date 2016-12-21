@@ -1,13 +1,11 @@
-import tests.docker_base as docker_base
 import requests
 import unittest
 
+import base.docker_base as docker_base
+
 
 def setup():
-    docker_base.compose_ensure_up(
-        'tests/test-compose.localized.yml',
-        'test_serve'
-    )
+    pass
 
 
 def teardown():
