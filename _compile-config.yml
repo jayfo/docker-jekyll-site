@@ -1,9 +1,9 @@
 config:
   local:
     docker_toolbox:
-      version: 1.12.3
       # Docker Toolbox is currently pinned by this bug:
       #   https://github.com/docker/toolbox/issues/607
+      version: 1.12.3
       macos:
         cmd_bash: /bin/bash
         cmd_dockermachine: /usr/local/bin/docker-machine
