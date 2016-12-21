@@ -1,61 +1,29 @@
 #
 # Install Ruby
 #
-# Based on:  https://hub.docker.com/_/ruby/
-#
 
-ENV RUBY_MAJOR 2.3
-ENV RUBY_VERSION 2.3.1
-ENV RUBY_DOWNLOAD_SHA256 b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd
-ENV RUBYGEMS_VERSION 2.6.7
-ENV BUNDLER_VERSION 1.13.1
+RUN wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz && \
+    mkdir /usr/src/ruby-install && \
+    tar -xzC /usr/src/ruby-install --strip-components=1 -f ruby-install-0.6.0.tar.gz && \
+    rm ruby-install-0.6.0.tar.gz && \
+    cd /usr/src/ruby-install && \
+    make install && \
+    rm -rf /usr/src/ruby-install
 
-# Skip installing gem documentation
-RUN mkdir -p /usr/local/etc \
-	&& { \
-		echo 'install: --no-document'; \
-		echo 'update: --no-document'; \
-	} >> /usr/local/etc/gemrc
+RUN wget -O chruby-0.3.9.tar.gz https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz && \
+    mkdir /usr/src/chruby && \
+    tar -xzC /usr/src/chruby --strip-components=1 -f chruby-0.3.9.tar.gz && \
+    rm chruby-0.3.9.tar.gz && \
+    cd /usr/src/chruby && \
+    make install && \
+    rm -rf /usr/src/chruby
 
-# Some of ruby's build scripts are written in ruby
-# Purge this later to make sure our final image uses what we just built
-RUN set -ex \
-	&& buildDeps=' \
-		bison \
-		libgdbm-dev \
-		ruby \
-	' \
-	&& apt-get -qq clean \
-	&& apt-get -qq update \
-	&& apt-get -qq install -y --no-install-recommends $buildDeps \
-	&& rm -rf /var/lib/apt/lists/* \
-	&& curl -fSL -o ruby.tar.gz "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.gz" \
-	&& echo "$RUBY_DOWNLOAD_SHA256 *ruby.tar.gz" | sha256sum -c - \
-	&& mkdir -p /usr/src/ruby \
-	&& tar -xzf ruby.tar.gz -C /usr/src/ruby --strip-components=1 \
-	&& rm ruby.tar.gz \
-	&& cd /usr/src/ruby \
-	&& { echo '#define ENABLE_PATH_CHECK 0'; echo; cat file.c; } > file.c.new && mv file.c.new file.c \
-	&& autoconf \
-	&& ./configure \
-	    --disable-install-doc \
-		> ruby.make.configure.log \
-	&& make -j"$(nproc)" > ruby.make.log \
-	&& make install > ruby.make.install.log \
-	&& apt-get -qq purge -y --auto-remove $buildDeps \
-	&& apt-get -qq clean \
-	&& gem update --system $RUBYGEMS_VERSION > ruby.rubygems.install.log \
-	&& rm -r /usr/src/ruby
+# System install of Ruby 2.3.3 with Bundler 1.13.6
+RUN ruby-install --system --no-reinstall ruby 2.3.3 && \
+    gem install bundler --version "1.13.6"
 
-RUN gem install bundler --version "$BUNDLER_VERSION"
-
-# Install things globally
-# Don't create ".bundle" in all our apps
-ENV GEM_HOME /usr/local/bundle
-ENV BUNDLE_PATH="$GEM_HOME" \
-	BUNDLE_BIN="$GEM_HOME/bin" \
-	BUNDLE_SILENCE_ROOT_WARNING=1 \
-	BUNDLE_APP_CONFIG="$GEM_HOME"
-ENV PATH $BUNDLE_BIN:$PATH
-RUN mkdir -p "$GEM_HOME" "$BUNDLE_BIN" \
-	&& chmod 777 "$GEM_HOME" "$BUNDLE_BIN"
+# Legacy pre-install of Ruby 2.3.1 with Bundler 1.13.1
+RUN ruby-install --no-reinstall ruby 2.3.1 && \
+    source /usr/local/share/chruby/chruby.sh && \
+    chruby ruby-2.3.1 && \
+    gem install bundler --version "1.13.1"
