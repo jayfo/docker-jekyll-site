@@ -94,6 +94,8 @@ compile_config:
       out: requirements3.in
     - in:  .travis.yml.in
       out: .travis.yml
+    - in:  Dockerfile.in
+      out: Dockerfile
 
 compile_docker_localize:
   entries:
