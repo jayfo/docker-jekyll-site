@@ -1,63 +1,187 @@
-This is a base for building projects that primarily constitute a Dockerfile.
+This is the beginning of a project template.
 
-# Testing with Docker
+# Project Dependencies
 
-This project uses Docker Toolbox to create virtual machines for testing with Docker.
-
-## Installing Docker Toolbox
-
-Development currently requires:
-
+Dependencies required for this project are:
+- Python 3.5.2
+- Node 4.5.0
+- Ruby 2.3.3
+- Ruby DevKit
 - Docker Toolbox 1.12.3
 
   Note we are using this version due to a potential bug in 1.12.5, which is unable to mount volumes on Windows.
 
   [https://github.com/docker/toolbox/issues/607](https://github.com/docker/toolbox/issues/607)
 
-  Installation on Windows:
+# Windows Installation
 
-  [https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe](https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe)
+## Installing Python
 
-  During installation:
+[https://www.python.org/ftp/python/3.5.2/python-3.5.2.exe](https://www.python.org/ftp/python/3.5.2/python-3.5.2.exe)
 
-  - On 'Select Destination Location':
+This documentation assumes an installation path of `c:/Python35`.
 
-  Set an installation path of c:/Program Files/Docker Toolbox.
+When installing Python:
 
-  - On 'Select Components':
+- Choose 'Customize Installation'
+- On 'Optional Features':
 
-  Uncheck 'Kitematic for Windows'.
+  Check 'pip' and 'for all users (requires elevation)'.
 
-## Creating a Virtual Environment and Installing Dependencies
+  Uncheck 'Documentation', 'tcl/tk and IDLE', 'Python test suite', 'py launcher'.
 
-  All Python work should be done within a virtual environment, to avoid dependency conflicts.
+- On 'Advanced Options':
 
-Create the virtual environment. From the working directory of our project (e.g., `c:/devel/testwithdocker-base`):
+  Set an installation path of `c:/Python35`.
 
-    c:/Python35\python.exe -m venv env35
+  Uncheck all options.
 
-This will create a directory for the virtual environment (e.g., `c:/devel/testwithdocker-base\env35\`).
+### Creating a Virtual Environment and Installing Dependencies
+
+Create the virtual environment. From the working directory of our project (e.g., `c:/devel/invoke-base`):
+
+~~~
+c:/Python35/python.exe -m venv env35
+~~~
+
+This will create a directory for the virtual environment (e.g., `c:/devel/invoke-base/env35/`).
 
 Next activate that virtual environment and install our Python dependencies:
 
-    env35\Scripts\activate.bat
-    pip install -r requirements3.txt
+~~~
+env35/Scripts/activate.bat
+pip install -r requirements3.txt
+~~~
 
-## Starting Docker Containers and Running Tests
+## Installing Node
 
-If it is not already active, you need to re-activate the virtual environment.
-From the working directory of our project (e.g., `c:/devel/testwithdocker-base`):
+[https://nodejs.org/dist/v4.5.0/node-v4.5.0-x64.msi](https://nodejs.org/dist/v4.5.0/node-v4.5.0-x64.msi)
 
-    env35\Scripts\activate.bat
+The default installation options are appropriate.
 
-To start Docker containers:
+## Installing Ruby
 
-    invoke docker_start
+[https://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.3.3.exe](https://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.3.3.exe)
 
-To start a console in the Docker virtual machine:
+This documentation assumes an installation path of `c:/Ruby233`.
 
-    invoke docker_console
+When installing Ruby:
 
-To run tests, assuming Docker containers have been started:
+- On 'Installation Destination and Optional Tasks':
 
-    nosetests
+  Set an installation path of `c:/Ruby233`.
+
+  Check 'Add Ruby executables to your PATH'.
+
+### Installing Ruby DevKit:
+
+[https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-32-4.7.2-20130224-1151-sfx.exe](https://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-32-4.7.2-20130224-1151-sfx.exe)
+
+This documentation assumes an installation path of `c:/RubyDevKit`.
+
+When installing the Ruby DevKit:
+
+- Extract to `c:/RubyDevKit`.
+
+- Install the DevKit into the Ruby installation:
+
+  ~~~
+  cd c:/RubyDevKit
+  ruby dk.rb init
+  ruby dk.rb install
+  ~~~
+
+## Installing Docker Toolbox
+
+[https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe](https://github.com/docker/toolbox/releases/download/v1.12.3/DockerToolbox-1.12.3.exe)
+
+When installing Docker Toolbox:
+
+- On 'Select Destination Location':
+
+  Set an installation path of c:/Program Files/Docker Toolbox.
+
+- On 'Select Components':
+
+  Uncheck 'Kitematic for Windows'.
+
+# Mac Installation
+
+## Installing Homebrew
+
+This documentation assumes use of Homebrew: [https://brew.sh/](https://brew.sh/).
+
+~~~
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+~~~
+
+The default installation options are appropriate.
+
+## Installing Python
+
+~~~
+brew install python3
+~~~
+
+Installing `python3` via Homebrew should automatically install `pip3`. Use that to install `virtualenv`.
+
+~~~
+pip3 install virtualenv
+~~~
+
+### Creating a Virtual Environment and Installing Dependencies
+
+Create the virtual environment. From the working directory of our project (e.g., `~/Desktop/invoke-base`):
+
+~~~
+virtualenv -p python3 env35
+~~~
+
+This will create a directory for the virtual environment (e.g., `~/Desktop/invoke-base/env35/`).
+
+Next activate that virtual environment and install our Python dependencies:
+
+~~~
+source env35/bin/activate
+pip3 install -r requirements3.txt
+~~~
+
+## Installing Node
+
+~~~
+brew install node
+~~~
+
+## Installing Ruby
+
+~~~
+brew install rbenv
+~~~
+
+Configure the terminal to include `rbenv`:
+
+~~~
+echo 'if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi' >> ~/.bash_profile`
+source ~/.bash_profile`
+~~~
+
+Install the correct version of Ruby:
+
+~~~
+rbenv install 2.3.3
+rbenv global 2.3.3
+~~~
+
+Alternatively, you can specify a Ruby version for the directory:
+
+~~~
+rbenv local 2.3.3
+~~~
+
+### Installing Ruby DevKit:
+
+Installing `rbenv` via Homebrew should automatically install `ruby-devkit`
+
+## Installing Docker Toolbox
+
+`TODO`
