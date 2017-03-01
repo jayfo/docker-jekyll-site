@@ -39,7 +39,7 @@ def compose_run(file_compose, compose_command):
         raise Exception('Unknown runtime environment')
 
     # Call the command
-    result = base.invoke.tasks.execute.run(command)
+    result = base.invoke.tasks.command.run(command)
 
 
 # def docker_run(docker_command, check_result=True):
@@ -69,7 +69,7 @@ def docker_run(docker_command):
         raise Exception('Unknown runtime environment')
 
     # Call the command
-    result = base.invoke.tasks.execute.run(command)
+    result = base.invoke.tasks.command.run(command)
 
 
 def machine_console():
@@ -128,7 +128,7 @@ def machine_ensure():
         raise Exception('Unknown runtime environment')
 
     # Call the command
-    result = base.invoke.tasks.execute.run(command)
+    result = base.invoke.tasks.command.run(command)
 
 
 def machine_ip():
@@ -153,7 +153,7 @@ def machine_ip():
         raise Exception('Unknown runtime environment')
 
     # Call the command
-    result = base.invoke.tasks.execute.run(command)
+    result = base.invoke.tasks.command.run(command)
 
     ip_address = result.stdout.strip()
 
