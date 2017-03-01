@@ -15,7 +15,6 @@ ENV LANG="C.UTF-8" \
 # Use bash instead of sh, fix stdin tty messages
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
     sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
-
 #
 # Install the packages we need for getting things done
 #
@@ -82,4 +81,3 @@ RUN apt-get -qq clean && \
         dos2unix \
     && \
     apt-get -qq clean
-
