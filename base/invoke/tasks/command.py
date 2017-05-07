@@ -9,18 +9,6 @@ def run(command, error_on_failure=True):
     #     if flag_print:
     #         print(line, end='', flush=True)
 
-    # # Parameters to keep everything silent
-    # params_silent = {
-    #     # Some of the commands output characters that cause Unicode errors on Windows,
-    #     # so we set an encoding that will help the command line behave
-    #     'encoding': sys.stdout.encoding,
-    #     'hide': 'both',
-    #     'warn': True
-    # }
-    #
-    #
-    # result = invoke.run(command, **params_silent)
-    #
     process = subprocess.Popen(
         command,
         shell=True,
@@ -28,9 +16,18 @@ def run(command, error_on_failure=True):
         stderr=subprocess.PIPE,
         universal_newlines=True
     )
-    process.wait()
 
-    process.stdout = process.stdout.read()
+    output = ''
+    for line in process.stdout:
+        output += line
+        print(
+            line.encode(sys.getdefaultencoding(), errors='backslashreplace').decode(sys.getdefaultencoding()),
+            end='',
+            flush=True
+        )
+
+    process.wait()
+    process.stdout = output
     process.stderr = process.stderr.read()
     process.failed = process.returncode != 0
 
