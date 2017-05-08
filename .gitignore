@@ -18,4 +18,4 @@ node_modules
 tests/full/docker/test_compose.localized.yml
 
 # Secrets that should not be committed, such as passwords or keys
->>>>>>> 76677a1717cd9952f7ce5e2654adc35cb232a1d9
+/secrets
