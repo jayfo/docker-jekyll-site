@@ -5,7 +5,7 @@ sudo: required
 language: python
 
 python:
-  - "3.5.2"
+  - "3.6.6"
 
 services:
   - docker
@@ -18,7 +18,7 @@ cache:
 
 install:
   # Install Python dependencies
-  - python -m pip install --upgrade pip==9.0.1
+  - python -m pip install --upgrade pip==18.0
   - python -m pip install -r requirements3.txt
 
   # Install Docker and Docker-Compose
@@ -35,7 +35,7 @@ install:
   - docker-compose version
 
   # Invoke will get our other dependencies
-  - invoke update_dependencies
+  - invoke dependencies_ensure
 
   # Build our Dockerfiles  - docker build -f Dockerfile .
 script:
