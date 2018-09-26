@@ -1,9 +1,6 @@
 #!/bin/bash
 
-{# This file compiles to base/docker-jekyll-site-entrypoint.sh -#}
-# This file compiled from base/docker-jekyll-site-entrypoint.sh.in
-
-{% import 'base/macros.sh' as base_macros %}
+{% import 'base/dockerfile/macros.sh' as base_macros %}
 
 # Modeled on:
 #

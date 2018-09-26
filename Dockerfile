@@ -15,7 +15,6 @@ ENV LANG="C.UTF-8" \
 # Use bash instead of sh, fix stdin tty messages
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh && \
     sed -i 's/^mesg n$/tty -s \&\& mesg n/g' /root/.profile
-
 #
 # Install the packages we need for getting things done
 #
@@ -82,68 +81,39 @@ RUN apt-get -qq clean && \
         dos2unix \
     && \
     apt-get -qq clean
-
 #
 # Install Python
 #
-# Based on:  https://hub.docker.com/_/python/
+# Uses pyenv.
 #
 
-ENV PYTHON_VERSION 3.5.2
-ENV PYTHON_PIP_VERSION 8.1.1
+ENV PYTHON_VERSION 3.6.6
+ENV PYTHON_PIP_VERSION 18.0
 
-# remove several traces of debian python
+# Remove Debian python
 RUN apt-get -qq purge -y python.*
 
-# gpg: key F73C700D: public key "Larry Hastings <larry@hastings.org>" imported
-ENV GPG_KEY 97FC712E4C024BBEA48A61ED3A5CA953F73C700D
+# Install pyenv
+ENV PYENV_ROOT /root/.pyenv
+ENV PATH $PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
 
 RUN set -ex \
-	&& curl -fSL "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" -o python.tar.xz \
-	&& curl -fSL "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" -o python.tar.xz.asc \
-	&& export GNUPGHOME="$(mktemp -d)" \
-	&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEY" \
-	&& gpg --batch --verify python.tar.xz.asc python.tar.xz \
-	&& rm -r "$GNUPGHOME" python.tar.xz.asc \
-	&& mkdir -p /usr/src/python \
-	&& tar -xJC /usr/src/python --strip-components=1 -f python.tar.xz \
-	&& rm python.tar.xz \
-	\
-	&& cd /usr/src/python \
-	&& ./configure \
-		--enable-loadable-sqlite-extensions \
-		--enable-shared \
-		> python.make.configure.log \
-	&& make -j$(nproc) > python.make.log \
-	&& make install > python.make.install.log \
-	&& ldconfig \
-    && curl -fSL 'https://bootstrap.pypa.io/get-pip.py' | python3 \
-	&& pip install --no-cache-dir --upgrade pip==$PYTHON_PIP_VERSION \
-	&& [ "$(pip list | awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ] \
-	&& find /usr/local -depth \
-		\( \
-		    \( -type d -a -name test -o -name tests \) \
-		    -o \
-		    \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
-		\) -exec rm -rf '{}' + \
-	&& rm -rf /usr/src/python ~/.cache
+    && curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash \
+    && pyenv update \
+    && pyenv install $PYTHON_VERSION \
+    && pyenv global $PYTHON_VERSION \
+    && pyenv rehash
 
-# make some useful symlinks that are expected to exist
-RUN cd /usr/local/bin \
-	&& rm -f easy_install && ln -s easy_install-3.5 easy_install \
-	&& rm -f idle && ln -s idle3 idle \
-	&& rm -f pip && ln -s pip3 pip \
-	&& rm -f pydoc && ln -s pydoc3 pydoc \
-	&& rm -f python && ln -s python3 python \
-	&& rm -f python-config && ln -s python3-config python-config
+RUN set -ex \
+    && python -m pip install --upgrade pip==$PYTHON_PIP_VERSION
 #
 # Install Ruby
 #
 
-RUN wget -O ruby-install-0.6.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.6.0.tar.gz && \
+RUN wget -O ruby-install-0.7.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.7.0.tar.gz && \
     mkdir /usr/src/ruby-install && \
-    tar -xzC /usr/src/ruby-install --strip-components=1 -f ruby-install-0.6.0.tar.gz && \
-    rm ruby-install-0.6.0.tar.gz && \
+    tar -xzC /usr/src/ruby-install --strip-components=1 -f ruby-install-0.7.0.tar.gz && \
+    rm ruby-install-0.7.0.tar.gz && \
     cd /usr/src/ruby-install && \
     make install && \
     rm -rf /usr/src/ruby-install
@@ -156,8 +126,14 @@ RUN wget -O chruby-0.3.9.tar.gz https://github.com/postmodern/chruby/archive/v0.
     make install && \
     rm -rf /usr/src/chruby
 
-# System install of Ruby 2.3.3 with Bundler 1.13.6
-RUN ruby-install --system --no-reinstall ruby 2.3.3 && \
+# Pre-install of Ruby 2.5.1 with Bundler 1.16.5
+RUN ruby-install --system --no-reinstall ruby 2.5.1 && \
+    gem install bundler --version "1.16.5"
+
+# Legacy pre-install of Ruby 2.3.3 with Bundler 1.13.6
+RUN ruby-install --no-reinstall ruby 2.3.3 && \
+    source /usr/local/share/chruby/chruby.sh && \
+    chruby ruby-2.3.3 && \
     gem install bundler --version "1.13.6"
 
 # Legacy pre-install of Ruby 2.3.1 with Bundler 1.13.1
@@ -171,7 +147,7 @@ RUN ruby-install --no-reinstall ruby 2.3.1 && \
 # Based on:  https://hub.docker.com/_/node/
 #
 
-ENV NODE_VERSION 5.1.0
+ENV NODE_VERSION 8.12.0
 
 ################################################################################
 # On 12/20/16, experiencing issues with keyservers. Signature check disabled.

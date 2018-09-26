@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# This file compiled from base/docker-jekyll-site-entrypoint.sh.in
-
-
 
 # Modeled on:
 #
@@ -22,7 +19,6 @@ if [[ ! -n $GIT_REPOSITORY_SITE_BRANCH ]] ; then
 fi
 
 # Pull the repository into our site directory
-
 
 # If we have an existing repository, but not the right one, we need to start from scratch
 GIT_REPOSITORY_EXISTING=$(git --git-dir=/docker-jekyll-site/site/.git remote -v | grep -m 1 origin | awk -F'[ \t]' '{print $2}')

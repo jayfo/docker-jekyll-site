@@ -1,6 +1,6 @@
 test_serve:
   container_name: test_serve
-  build: ..
+  build: ../../..
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   ports:
@@ -8,7 +8,7 @@ test_serve:
 
 test_publish_ssh:
   container_name: test_publish_ssh
-  build: ..
+  build: ../../..
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   volumes:
@@ -25,7 +25,7 @@ test_destination_sshd:
 
 test_publish_local:
   container_name: test_publish_local
-  build: ..
+  build: ../../..
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   volumes:
