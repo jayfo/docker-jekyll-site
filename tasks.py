@@ -1,5 +1,6 @@
 import importlib
 import invoke
+import requests
 
 task_module_names = [
     'base.invoke.tasks.compile',
@@ -41,3 +42,6 @@ def compile_download_base_dependencies():
         with open('docker-jekyll-site/{}'.format(file_current), 'wb') as f:
             for chunk in response.iter_content(chunk_size=1024):
                 f.write(chunk)
+
+
+ns.add_task(compile_download_base_dependencies)
