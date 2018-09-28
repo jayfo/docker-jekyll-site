@@ -12,8 +12,8 @@ test_publish_ssh:
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   volumes:
-    - "./tests/test-config/publish_ssh.yml:/docker-jekyll-site/publish_ssh.yml:ro"
-    - "./tests/test-secrets/publish_ssh_secrets.yml:/docker-jekyll-site/publish_ssh_secrets.yml:ro"
+    - "../../test-config/publish_ssh.yml:/docker_jekyll_site/publish_ssh.yml:ro"
+    - "../../test-secrets/publish_ssh_secrets.yml:/docker_jekyll_site/publish_ssh_secrets.yml:ro"
   links:
     - test_destination_sshd
 
@@ -21,7 +21,7 @@ test_destination_sshd:
   container_name: test_destination_sshd
   build: ../../test_destination_sshd
   volumes:
-    - "./tests/test_destination_sshd/site:/docker-jekyll-site/test_publish_ssh/site"
+    - "../../test_destination_sshd/site:/docker_jekyll_site/test_publish_ssh/site"
 
 test_publish_local:
   container_name: test_publish_local
@@ -29,12 +29,12 @@ test_publish_local:
   environment:
     GIT_REPOSITORY_SITE: "https://github.com/fogies/web-jekyll-base.git"
   volumes:
-    - "./tests/test-config/publish_local.yml:/docker-jekyll-site/publish_local.yml:ro"
-    - "volume_publish_local:/docker-jekyll-site/test_publish_local"
+    - "../../test-config/publish_local.yml:/docker_jekyll_site/publish_local.yml:ro"
+    - "volume_publish_local:/docker_jekyll_site/test_publish_local"
 
 test_destination_local:
   container_name: test_destination_local
   image: ubuntu:14.04
   command: tail -f /dev/null
   volumes:
-    - "volume_publish_local:/docker-jekyll-site/test_publish_local"
+    - "volume_publish_local:/docker_jekyll_site/test_publish_local"

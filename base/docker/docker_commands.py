@@ -42,8 +42,7 @@ def compose_run(file_compose, compose_command):
     result = base.invoke.tasks.command.run(command)
 
 
-# def docker_run(docker_command, check_result=True):
-def docker_run(docker_command):
+def docker_run(docker_command, error_on_failure=True):
     # Parse our config
     with open('_base_config.yml') as f:
         config_yaml = yaml.safe_load(f)
@@ -69,7 +68,9 @@ def docker_run(docker_command):
         raise Exception('Unknown runtime environment')
 
     # Call the command
-    result = base.invoke.tasks.command.run(command)
+    result = base.invoke.tasks.command.run(command, error_on_failure=error_on_failure)
+
+    return result
 
 
 def machine_console():

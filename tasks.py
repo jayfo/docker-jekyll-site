@@ -39,7 +39,7 @@ def compile_download_base_dependencies():
             'https://raw.githubusercontent.com/fogies/web-jekyll-base/master/{}'.format(file_current)
         )
 
-        with open('docker-jekyll-site/{}'.format(file_current), 'wb') as f:
+        with open('docker_jekyll_site/{}'.format(file_current), 'wb') as f:
             for chunk in response.iter_content(chunk_size=1024):
                 f.write(chunk)
 

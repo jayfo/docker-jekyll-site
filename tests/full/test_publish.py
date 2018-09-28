@@ -1,5 +1,6 @@
 import os
-import base.docker_base as docker_base
+import base.docker.docker_commands
+import subprocess
 import unittest
 
 #
@@ -22,22 +23,22 @@ class TestPublish(unittest.TestCase):
 
     def test_publish_local(self):
         # Ensure the target directory exists
-        docker_base.docker_run(
+        base.docker.docker_commands.docker_run(
             'exec test_destination_local '
-            'mkdir -p /docker-jekyll-site/test_publish_local/site'
+            'mkdir -p /docker_jekyll_site/test_publish_local/site'
         )
 
         # Empty out the target directory
-        docker_base.docker_run(
+        base.docker.docker_commands.docker_run(
             'exec test_destination_local '
-            'find /docker-jekyll-site/test_publish_local/site -mindepth 1 -delete'
+            'find /docker_jekyll_site/test_publish_local/site -mindepth 1 -delete'
         )
 
         # Ensure the file we expect is not already there
-        result = docker_base.docker_run(
+        result = base.docker.docker_commands.docker_run(
             'exec test_destination_local '
             'ls /docker-jekyll-site/test_publish_local/site/{}'.format(TestPublish.TEST_FILE),
-            check_result=False
+            error_on_failure=False
         )
         self.assertNotEqual(
             result.returncode,
@@ -46,16 +47,16 @@ class TestPublish(unittest.TestCase):
         )
 
         # Put a junk file in the target, to confirm it is removed
-        docker_base.docker_run(
+        base.docker.docker_commands.docker_run(
             'exec test_destination_local '
-            'touch /docker-jekyll-site/test_publish_local/site/junk'
+            'touch /docker_jekyll_site/test_publish_local/site/junk'
         )
 
         # Ensure our junk is there
-        result = docker_base.docker_run(
+        result = base.docker.docker_commands.docker_run(
             'exec test_destination_local '
-            'ls /docker-jekyll-site/test_publish_local/site/junk',
-            check_result=False
+            'ls /docker_jekyll_site/test_publish_local/site/junk',
+            error_on_failure=False
         )
         self.assertEqual(
             result.returncode,
@@ -64,14 +65,14 @@ class TestPublish(unittest.TestCase):
         )
 
         # Do the build and publish
-        docker_base.compose_run('tests/test-compose.localized.yml', 'build test_publish_local')
-        docker_base.compose_run('tests/test-compose.localized.yml', 'up test_publish_local')
+        base.docker.docker_commands.compose_run('tests/full/docker/test_compose.localized.yml', 'build test_publish_local')
+        base.docker.docker_commands.compose_run('tests/full/docker/test_compose.localized.yml', 'up test_publish_local')
 
         # Ensure we find a file we expect
-        result = docker_base.docker_run(
+        result = base.docker.docker_commands.docker_run(
             'exec test_destination_local '
-            'ls /docker-jekyll-site/test_publish_local/site/{}'.format(TestPublish.TEST_FILE),
-            check_result=False
+            'ls /docker_jekyll_site/test_publish_local/site/{}'.format(TestPublish.TEST_FILE),
+            error_on_failure=False
         )
         self.assertEqual(
             result.returncode,
@@ -80,10 +81,10 @@ class TestPublish(unittest.TestCase):
         )
 
         # Ensure we don't find the junk we created
-        result = docker_base.docker_run(
+        result = base.docker.docker_commands.docker_run(
             'exec test_destination_local '
-            'ls /docker-jekyll-site/test_publish_local/site/junk',
-            check_result=False
+            'ls /docker_jekyll_site/test_publish_local/site/junk',
+            error_on_failure=False
         )
         self.assertNotEqual(
             result.returncode,
@@ -93,15 +94,15 @@ class TestPublish(unittest.TestCase):
 
     def test_publish_ssh(self):
         # Ensure the target directory exists
-        docker_base.docker_run(
+        base.docker.docker_commands.docker_run(
             'exec test_destination_sshd '
-            'mkdir -p /docker-jekyll-site/test_publish_ssh/site'
+            'mkdir -p /docker_jekyll_site/test_publish_ssh/site'
         )
 
         # Empty out the target directory
-        docker_base.docker_run(
+        base.docker.docker_commands.docker_run(
             'exec test_destination_sshd '
-            'find /docker-jekyll-site/test_publish_ssh/site -mindepth 1 -delete'
+            'find /docker_jekyll_site/test_publish_ssh/site -mindepth 1 -delete'
         )
 
         # Ensure the file we expect is not already there
@@ -111,9 +112,9 @@ class TestPublish(unittest.TestCase):
         )
 
         # Put a junk file in the target, to confirm it is removed
-        docker_base.docker_run(
+        base.docker.docker_commands.docker_run(
             'exec test_destination_sshd '
-            'touch /docker-jekyll-site/test_publish_ssh/site/junk'
+            'touch /docker_jekyll_site/test_publish_ssh/site/junk'
         )
 
         # Ensure our junk is there
@@ -123,8 +124,8 @@ class TestPublish(unittest.TestCase):
         )
 
         # Do the build and publish
-        docker_base.compose_run('tests/test-compose.localized.yml', 'build test_publish_ssh')
-        docker_base.compose_run('tests/test-compose.localized.yml', 'up test_publish_ssh')
+        base.docker.docker_commands.compose_run('tests/full/docker/test_compose.localized.yml', 'build test_publish_ssh')
+        base.docker.docker_commands.compose_run('tests/full/docker/test_compose.localized.yml', 'up test_publish_ssh')
 
         # Ensure we find a file we expect
         self.assertTrue(

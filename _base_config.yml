@@ -116,8 +116,8 @@ compile_config:
       out: .travis.yml
     - in:  Dockerfile.in
       out: Dockerfile
-    - in:  docker-jekyll-site/docker-jekyll-site-entrypoint.sh.in
-      out: docker-jekyll-site/docker-jekyll-site-entrypoint.sh
+    - in:  docker_jekyll_site/docker_jekyll_site_entrypoint.sh.in
+      out: docker_jekyll_site/docker_jekyll_site_entrypoint.sh
 
 compile_docker_localize:
   entries:

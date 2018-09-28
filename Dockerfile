@@ -127,7 +127,9 @@ RUN wget -O chruby-0.3.9.tar.gz https://github.com/postmodern/chruby/archive/v0.
     rm -rf /usr/src/chruby
 
 # Pre-install of Ruby 2.5.1 with Bundler 1.16.5
-RUN ruby-install --system --no-reinstall ruby 2.5.1 && \
+RUN apt-get -qq clean && \
+    apt-get -qq update && \
+    ruby-install --system --no-reinstall ruby 2.5.1 && \
     gem install bundler --version "1.16.5"
 
 # Legacy pre-install of Ruby 2.3.3 with Bundler 1.13.6
@@ -200,29 +202,31 @@ RUN apt-get -qq clean && \
     apt-get -qq clean
 
 ################################################################################
-# Install Python packages.
+# Install Python packages into temp directory, so they are in cache.
 ################################################################################
-COPY docker-jekyll-site/requirements3.txt /docker-jekyll-site-temp/requirements3.txt
-RUN dos2unix /docker-jekyll-site-temp/requirements3.txt && \
-    pip install -r /docker-jekyll-site-temp/requirements3.txt
+COPY docker_jekyll_site/requirements3.txt /docker_jekyll_site_temp/requirements3.txt
+RUN dos2unix /docker_jekyll_site_temp/requirements3.txt && \
+    pip install -r /docker_jekyll_site_temp/requirements3.txt
 
 ################################################################################
-# Install Ruby gems.
+# Install Ruby gems into temp directory, so they are in cache.
 ################################################################################
-COPY docker-jekyll-site/Gemfile /docker-jekyll-site-temp/Gemfile
-COPY docker-jekyll-site/Gemfile.lock /docker-jekyll-site-temp/Gemfile.lock
-RUN dos2unix /docker-jekyll-site-temp/Gemfile && \
-    dos2unix /docker-jekyll-site-temp/Gemfile.lock && \
-    cd /docker-jekyll-site-temp && bundle install
+COPY docker_jekyll_site/Gemfile /docker_jekyll_site_temp/Gemfile
+COPY docker_jekyll_site/Gemfile.lock /docker_jekyll_site_temp/Gemfile.lock
+RUN dos2unix /docker_jekyll_site_temp/Gemfile && \
+    dos2unix /docker_jekyll_site_temp/Gemfile.lock && \
+    cd /docker_jekyll_site_temp && \
+    bundle install
 
 ################################################################################
-# Install Node modules. We will need to link to these at runtime.
+# Install Node modules into temp directory, so they are in cache.
 ################################################################################
-COPY docker-jekyll-site/npm-shrinkwrap.json /docker-jekyll-site-temp/npm-shrinkwrap.json
-COPY docker-jekyll-site/package.json /docker-jekyll-site-temp/package.json
-RUN dos2unix /docker-jekyll-site-temp/npm-shrinkwrap.json && \
-    dos2unix /docker-jekyll-site-temp/package.json && \
-    cd /docker-jekyll-site-temp && npm install
+COPY docker_jekyll_site/npm-shrinkwrap.json /docker_jekyll_site_temp/npm-shrinkwrap.json
+COPY docker_jekyll_site/package.json /docker_jekyll_site_temp/package.json
+RUN dos2unix /docker_jekyll_site_temp/npm-shrinkwrap.json && \
+    dos2unix /docker_jekyll_site_temp/package.json && \
+    cd /docker_jekyll_site_temp && \
+    npm install
 
 ################################################################################
 # Expose any ports or persistent volumes.
@@ -232,14 +236,14 @@ RUN dos2unix /docker-jekyll-site-temp/npm-shrinkwrap.json && \
 EXPOSE 4000
 
 # Volume where the site will persist
-VOLUME ["/docker-jekyll-site/site"]
+VOLUME ["/docker_jekyll_site/site"]
 
 ################################################################################
 # Set up our entrypoint script.
 ################################################################################
-COPY docker-jekyll-site/docker-jekyll-site-entrypoint.sh /docker-jekyll-site-entrypoint.sh
-RUN dos2unix /docker-jekyll-site-entrypoint.sh && \
-    chmod +x /docker-jekyll-site-entrypoint.sh
+COPY docker_jekyll_site/docker_jekyll_site_entrypoint.sh /docker_jekyll_site_entrypoint.sh
+RUN dos2unix /docker_jekyll_site_entrypoint.sh && \
+    chmod +x /docker_jekyll_site_entrypoint.sh
 
 # Run the wrapper script
-CMD ["/docker-jekyll-site-entrypoint.sh"]
+CMD ["/docker_jekyll_site_entrypoint.sh"]
