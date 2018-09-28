@@ -19,7 +19,9 @@ RUN wget -O chruby-0.3.9.tar.gz https://github.com/postmodern/chruby/archive/v0.
     rm -rf /usr/src/chruby
 
 # Pre-install of Ruby 2.5.1 with Bundler 1.16.5
-RUN ruby-install --system --no-reinstall ruby 2.5.1 && \
+RUN apt-get -qq clean && \
+    apt-get -qq update && \
+    ruby-install --system --no-reinstall ruby 2.5.1 && \
     gem install bundler --version "1.16.5"
 
 # Legacy pre-install of Ruby 2.3.3 with Bundler 1.13.6
