@@ -37,7 +37,7 @@ class TestPublish(unittest.TestCase):
         # Ensure the file we expect is not already there
         result = base.docker.docker_commands.docker_run(
             'exec test_destination_local '
-            'ls /docker-jekyll-site/test_publish_local/site/{}'.format(TestPublish.TEST_FILE),
+            'ls /docker_jekyll_site/test_publish_local/site/{}'.format(TestPublish.TEST_FILE),
             error_on_failure=False
         )
         self.assertNotEqual(
