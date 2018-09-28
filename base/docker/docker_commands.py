@@ -10,7 +10,7 @@ def compose_up(file_compose, service):
     compose_run(file_compose, 'up -d {}'.format(service))
 
 
-def compose_run(file_compose, compose_command):
+def compose_run(file_compose, compose_command, error_on_failure=True):
     # Parse our config
     with open('_base_config.yml') as f:
         config_yaml = yaml.safe_load(f)
@@ -39,7 +39,9 @@ def compose_run(file_compose, compose_command):
         raise Exception('Unknown runtime environment')
 
     # Call the command
-    result = base.invoke.tasks.command.run(command)
+    result = base.invoke.tasks.command.run(command, error_on_failure=error_on_failure)
+
+    return result
 
 
 def docker_run(docker_command, error_on_failure=True):
