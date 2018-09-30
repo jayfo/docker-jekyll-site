@@ -137,12 +137,6 @@ RUN ruby-install --no-reinstall ruby 2.3.3 && \
     source /usr/local/share/chruby/chruby.sh && \
     chruby ruby-2.3.3 && \
     gem install bundler --version "1.13.6"
-
-# Legacy pre-install of Ruby 2.3.1 with Bundler 1.13.1
-RUN ruby-install --no-reinstall ruby 2.3.1 && \
-    source /usr/local/share/chruby/chruby.sh && \
-    chruby ruby-2.3.1 && \
-    gem install bundler --version "1.13.1"
 #
 # Install Node.js
 #
