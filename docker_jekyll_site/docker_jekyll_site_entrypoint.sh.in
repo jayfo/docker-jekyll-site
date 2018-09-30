@@ -54,7 +54,7 @@ if [[ -f /docker_jekyll_site/publish_ssh.yml ]] ; then
   PUBLISH_USER=$(awk '{ if(match($0, /  user: (.*)/, arr)) print arr[1] }' /docker_jekyll_site/publish_ssh_secrets.cleaned.yml)
   PUBLISH_PASSWORD=$(awk '{ if(match($0, /  password: (.*)/, arr)) print arr[1] }' /docker_jekyll_site/publish_ssh_secrets.cleaned.yml)
 
-  SSH_OPTIONS='-vvv -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+  SSH_OPTIONS='-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
 
   # Ensure our directories exist
   sshpass -p $PUBLISH_PASSWORD ssh $SSH_OPTIONS $PUBLISH_USER@$PUBLISH_HOST mkdir -p $PUBLISH_STAGING
