@@ -2,7 +2,7 @@
 # This file compiled from Dockerfile.in.
 #
 
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 
 #
 # Environment configurations to get everything to play well

@@ -39,7 +39,7 @@ config:
     main:
       file: Dockerfile
       context: .
-      base_image: ubuntu:14.04
+      base_image: ubuntu:18.04
 
   readme:
     url_github: https://github.com/fogies/docker-jekyll-site
