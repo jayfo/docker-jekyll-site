@@ -2,7 +2,7 @@
 # This file compiled from Dockerfile.in.
 #
 
-FROM ubuntu:14.04
+FROM ubuntu:18.04
 
 #
 # Environment configurations to get everything to play well
@@ -132,11 +132,12 @@ RUN apt-get -qq clean && \
     ruby-install --system --no-reinstall ruby 2.5.1 && \
     gem install bundler --version "1.16.5"
 
-# Legacy pre-install of Ruby 2.3.3 with Bundler 1.13.6
-RUN ruby-install --no-reinstall ruby 2.3.3 && \
-    source /usr/local/share/chruby/chruby.sh && \
-    chruby ruby-2.3.3 && \
-    gem install bundler --version "1.13.6"
+# Removed for incompatibility with older OpenSSL
+# # Legacy pre-install of Ruby 2.3.3 with Bundler 1.13.6
+# RUN ruby-install --no-reinstall ruby 2.3.3 && \
+#     source /usr/local/share/chruby/chruby.sh && \
+#     chruby ruby-2.3.3 && \
+#     gem install bundler --version "1.13.6"
 #
 # Install Node.js
 #
