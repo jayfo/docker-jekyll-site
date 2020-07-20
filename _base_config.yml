@@ -31,7 +31,7 @@ config:
         cmd_dockermachine: c:\Program Files\Docker Toolbox\docker-machine.exe
 
     travis:
-      version: 1.11.2-0~trusty
+      version: 17.03.3~ce-0~ubuntu-xenial
       compose_version: 1.8.0-rc1
       compose_up_delay: 60
 
