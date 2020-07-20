@@ -7,6 +7,7 @@
 
 # Python environment
 /env36
+/env38
 
 # Python compilation
 *.pyc
